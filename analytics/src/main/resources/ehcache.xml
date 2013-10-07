@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ehcache updateCheck="false">
+    <defaultCache maxElementsInMemory="10000" eternal="false" timeToIdleSeconds="3600" timeToLiveSeconds="3600" overflowToDisk="false" diskPersistent="false"/>
+
+    <cache name="TraceRepositoryCacheAnalyzer"
+           maxElementsInMemory="100000" eternal="false" timeToIdleSeconds="900" timeToLiveSeconds="900" overflowToDisk="false" diskPersistent="false" />
+    <cache name="DuplicatesCacheAnalyzer"
+           maxElementsInMemory="100000" eternal="false" timeToIdleSeconds="900" timeToLiveSeconds="900" overflowToDisk="false" diskPersistent="false" />
+</ehcache>
