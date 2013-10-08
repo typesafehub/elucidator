@@ -16,7 +16,7 @@ case class ResultPayload(json: String, headers: List[HttpHeader])
 class GatewayActor extends Actor with ActorLogging {
   import GatewayActor._
   val settings = RestExtension(context.system)
-  val repository = RepositoryFactory.repository(context.system)
+  val repository = new LocalMemoryAtmosRepository(context.system)
   val rootResource = context.actorOf(Props[RootResource], "rootResource")
   val dashboardResource = context.actorOf(Props[DashboardResource], "dashboardResource")
   val actorStatsResource = context.actorOf(Props(new ActorStatsResource(repository.actorStatsRepository)), "actorStatsResource")

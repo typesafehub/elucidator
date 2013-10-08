@@ -8,7 +8,7 @@ import activator.analytics.repository._
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 
 /**
- * Common things to implement for the analyzer types (local and mongo).
+ * Common things to implement for the analyzer types
  */
 trait AnalyzerBoot {
   def system: ActorSystem

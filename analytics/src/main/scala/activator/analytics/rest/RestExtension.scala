@@ -6,14 +6,9 @@ package activator.analytics.rest
 import akka.actor._
 
 class StandardRestExtension(system: ExtendedActorSystem) extends Extension {
-  // Sets mode of system (local memory or MongoDB repository)
   val config = system.settings.config
 
-  val Mode = config.getString("atmos.mode")
-
-  final val UseLocalMemory = config.getString("atmos.mode") == "local"
-
-  // Query related
+  // Rest related
   final val HtmlFileResources = config.getString("atmos.analytics.html-file-resources")
 
   final val JsonPrettyPrint = config.getBoolean("atmos.analytics.json-pretty-print")

@@ -47,9 +47,6 @@ class StandardAnalyzeExtension(system: ExtendedActorSystem) extends Extension {
   val RetryDelay = Duration(getMilliseconds("atmos.analytics.retry-delay"), TimeUnit.MILLISECONDS)
   val SaveSpans = getBoolean("atmos.analytics.save-spans")
 
-  val AnalyticsMongoConfig = getConfig("atmos.analytics.mongo")
-  val TraceMongoConfig = getConfig("atmos.trace.mongo")
-
   val FailoverTimeout = Duration(getMilliseconds("atmos.subscribe.failover-timeout"), TimeUnit.MILLISECONDS)
   val NotificationEventLogSize = getLong("atmos.subscribe.notification-event-log-size")
 

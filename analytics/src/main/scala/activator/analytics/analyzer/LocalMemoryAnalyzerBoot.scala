@@ -13,7 +13,6 @@ import com.typesafe.config.Config
 
 /**
  * Local memory analyzer.
- * Only intended to be used for development and test.
  */
 class LocalMemoryAnalyzerBoot(val system: ActorSystem, receiver: Option[TraceReceiver] = None)
   extends AnalyzerBoot {
@@ -44,6 +43,7 @@ class LocalMemoryAnalyzerBoot(val system: ActorSystem, receiver: Option[TraceRec
   val systemMetricsTimeSeriesRepository = LocalMemorySystemMetricsRepository
   val playRequestSummaryRepository = LocalMemoryPlayRequestSummaryRepository
   val playTraceTreeFlushAge: Long = 2L * 1000L // 2 seconds
+
   /**
    * Make it easy to override construction of Analyzer in tests
    */
