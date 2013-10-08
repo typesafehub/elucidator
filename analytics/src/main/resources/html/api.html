@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+   <title>Atmos Analytics REST API Description</title>
+   <link rel="stylesheet" href="/static/api.css" />
+ </head>
+ <body>
+   <h1>Atmos Analytics REST API Description</h1>
+
+   <div id="result" >
+   </div>
+
+
+   <script language="javascript" type="text/javascript" src="/static/jquery/jquery.min.js" ></script>
+   <script>
+     $(document).ready(function(){
+       renderApiDescription();
+     });
+
+	function isArray(a) {
+		return(typeof(a)==='object')?a.constructor.toString().match(/array/i)!==null||a.length!==undefined:false;
+	}
+
+    function formatLink(uri) {
+      return formatLinkWithName(uri, uri);
+    }
+
+	function formatLinkWithName(name, uri) {
+		return '<a href="' + uri + '"'
+			+ '>' + name
+			+ '</a>';
+	}
+
+	function formatDescription(str) {
+	  var newLineRegExp = new RegExp("\n", "g");
+	  return str.replace(newLineRegExp, '<br/>')
+	}
+
+	function formatArrayValues(values) {
+	  var commaRegExp = new RegExp(",", "g");
+	  return ("" + values).replace(commaRegExp, ', ')
+	}
+
+	function renderApiDescription() {
+		$.getJSON('/monitoring', function(data) {
+		    var result = $("#result")
+
+		    var toc = ''
+		    toc += '<div class="toc"><ul>'
+		    var spaceRegExp = new RegExp(" ", "g")
+		    $.each(data.resources, function(){
+		        anchor = '#' + this.name.replace(spaceRegExp, '_')
+				toc += '<li>' + formatLinkWithName(this.name, anchor) + '</li>';
+			});
+			toc += '</ul></toc>'
+			result.append(toc)
+
+			result.append('<p>' + formatDescription(data.description) + '</p>');
+
+			$.each(data.resources, function(){
+				result.append('<h2><a name="' + this.name.replace(spaceRegExp, '_') + '"/>' + this.name + '</h2>');
+				result.append('<p>' + formatDescription(this.description) + '</p>');
+				result.append('<p>URI: ' + this.uri + '</p>');
+				result.append('<p>Sample link: ' + formatLink(this.sample) + '</p>');
+
+				if (this.filter) {
+				  result.append('<h3>Filter</h3>');
+				  $.each(this.filter, function(){
+				    var param = ''
+				    param += '<ul><li><b>' + this.parameter + '</b>';
+				    param += '<ul>'
+				    if (this.parameter) param += '<li><p>Parameter: ' + this.parameter + '</p></li>';
+				    if (this.description) param += '<li><p>Description: ' + formatDescription(this.description) + '</p></li>';
+				    if (this.format) param += '<li><p>Format: ' + this.format  + '</p></li>';
+				    if (this.values && isArray(this.values)) {
+				      param += '<li><p>Values: ' + formatArrayValues(this.values) + '</p></li>';
+				    } else if (this.values) {
+				      param += '<li><p>Values: ' + formatLink(this.values) + '</p></li>';
+				    }
+				    if (this.sample) param += '<li><p>Sample: ' + this.sample  + '</p></li>';
+				    param += '</ul>'
+				    result.append('<div class="param">' + param + '</div>');
+				  });
+				}
+
+				result.append('<h3>Sample</h3>');
+				result.append('<p>' + formatLink(this.sample) + '</p>');
+				result.append('<iframe src="' + this.sample + '" ' +
+				  'height="300" width="90%" scrolling="on" ' +
+				  ' </iframe>');
+			});
+		});
+	}
+
+
+	</script>
+
+ </body>
+ </html>

@@ -30,7 +30,6 @@ class MessageRateTimeSeriesAnalyzer(
 
   // this should not be configurable, a new point is created for each "store"
   override val storeTimeIntervalMillis = 1000L
-  override val useRandomStoreInterval = false
 
   val statsRepository: StatsRepository = new StatsRepository {
     def save(stats: Iterable[MessageRateTimeSeries]): Unit = {

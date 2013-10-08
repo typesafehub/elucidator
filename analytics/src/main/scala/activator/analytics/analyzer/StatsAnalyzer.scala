@@ -98,16 +98,10 @@ trait StatsAnalyzer extends Actor with ActorLogging {
   val actorPathLevelTimeRanges = AnalyzeExtension(system).ActorPathTimeRanges
   val storeTimeIntervalMillis = AnalyzeExtension(system).StoreTimeInterval
   val storeLimit = AnalyzeExtension(system).StoreLimit
-  val useRandomStoreInterval = AnalyzeExtension(system).StoreUseRandomInterval
   val useAllTime = AnalyzeExtension(system).StoreUseAllTime
 
   protected def updateNextStoreTimestamp(eventTimestamp: Timestamp): Unit = {
-    if (useRandomStoreInterval) {
-      val rndInterval = storeTimeIntervalMillis / 2
-      nextStoreTimestamp = eventTimestamp + storeTimeIntervalMillis - (rndInterval / 2) +
-        ThreadLocalRandom.current.nextLong(rndInterval)
-    } else
-      nextStoreTimestamp = eventTimestamp + storeTimeIntervalMillis
+    nextStoreTimestamp = eventTimestamp + storeTimeIntervalMillis
   }
 
   val stats = MutableMap[GROUP, STATS]()

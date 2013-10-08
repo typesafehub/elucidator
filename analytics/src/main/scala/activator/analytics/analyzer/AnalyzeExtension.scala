@@ -39,8 +39,6 @@ class StandardAnalyzeExtension(system: ExtendedActorSystem) extends Extension {
   val StoreLimit = getLong("atmos.analytics.store-limit")
   val StoreTimeInterval = getLong("atmos.analytics.store-time-interval")
   val StoreUseAllTime = getBoolean("atmos.analytics.store-use-all-time")
-  val StoreUseDuplicatesCache = getBoolean("atmos.analytics.store-use-duplicates-cache")
-  val StoreUseRandomInterval = getBoolean("atmos.analytics.store-use-random-interval")
   val UseNanoTimeCrossNodes = getBoolean("atmos.analytics.use-nano-time-cross-nodes")
 
   val MaxRetryAttempts = getInt("atmos.analytics.max-retry-attempts")

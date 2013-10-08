@@ -31,6 +31,9 @@ lazy val analytics =
 
 // *** RUNNER ***
 
+mainClass in (Compile, run) := Some("activator.analytics.runner.AnalyticsMain")
+
 lazy val runner =
         project.in( file("runner") )
+    .dependsOn(analytics)
 	.settings(formatSettings:_*)

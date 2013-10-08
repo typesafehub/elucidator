@@ -25,7 +25,6 @@ class MailboxTimeSeriesAnalyzer(
 
   // this should not be configurable, a new point is created for each "store"
   override val storeTimeIntervalMillis = 1000L
-  override val useRandomStoreInterval = false
   var lastStoredTimestamp: Timestamp = 0L
 
   val statsRepository: StatsRepository = new StatsRepository {
