@@ -5,8 +5,6 @@ package activator.analytics.analyzer
 
 import akka.actor.ActorRef
 import activator.analytics.data.{ TimeRange, SystemMetricsTimeSeriesPoint, SystemMetricsTimeSeries }
-import activator.analytics.data.{ TimeRange, SystemMetricsTimeSeriesPoint, SystemMetricsTimeSeries }
-import activator.analytics.repository.DuplicatesRepository
 import activator.analytics.repository.SystemMetricsTimeSeriesRepository
 import com.typesafe.atmos.trace.ActorCreated
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
@@ -25,7 +23,6 @@ import TimeRange.minuteRange
 class SystemMetricsTimeSeriesAnalyzer(
   repository: SystemMetricsTimeSeriesRepository,
   val traceRepository: TraceRetrievalRepository,
-  val duplicatesRepository: DuplicatesRepository,
   val alertDispatcher: Option[ActorRef]) extends EventStatsAnalyzer {
 
   type BUF = SystemMetricsTimeSeriesBuffer

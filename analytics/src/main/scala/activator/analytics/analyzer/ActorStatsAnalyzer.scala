@@ -5,12 +5,10 @@
 package activator.analytics.analyzer
 
 import akka.actor.ActorRef
-import collection.mutable.ArrayBuffer
 import activator.analytics.data._
 import activator.analytics.data.BasicTypes._
 import activator.analytics.metrics.{ RateMetric, PairMetric }
 import activator.analytics.repository.ActorStatsRepository
-import activator.analytics.repository.DuplicatesRepository
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 
@@ -21,7 +19,6 @@ class ActorStatsAnalyzer(
   pathLevel: Option[Boolean],
   actorStatsRepository: ActorStatsRepository,
   val traceRepository: TraceRetrievalRepository,
-  val duplicatesRepository: DuplicatesRepository,
   val alertDispatcher: Option[ActorRef])
   extends EventStatsAnalyzer with EventStatsGrouping {
 

@@ -3,7 +3,7 @@
  */
 package activator.analytics.analyzer
 
-import activator.analytics.repository.{ MetadataStatsRepository, DuplicatesRepository }
+import activator.analytics.repository.MetadataStatsRepository
 import activator.analytics.data.{ MetadataStatsMetrics, Scope, TimeRange, MetadataStats }
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 import com.typesafe.atmos.trace._
@@ -15,7 +15,6 @@ import scala.collection.mutable.ArrayBuffer
 class MetadataStatsAnalyzer(
   metadataStatsRepository: MetadataStatsRepository,
   val traceRepository: TraceRetrievalRepository,
-  val duplicatesRepository: DuplicatesRepository,
   val alertDispatcher: Option[ActorRef])
   extends EventStatsAnalyzer with EventStatsGrouping {
 

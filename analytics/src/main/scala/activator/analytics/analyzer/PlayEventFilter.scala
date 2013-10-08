@@ -3,8 +3,6 @@
  */
 package activator.analytics.analyzer
 
-import activator.analytics.repository.DuplicatesRepository
-import activator.analytics.repository.DuplicatesTraceKey
 import com.typesafe.atmos.trace._
 import akka.actor.{ Actor, ActorRef, ActorLogging }
 
@@ -18,9 +16,7 @@ object PlayEventFilter {
   }
 }
 
-class PlayEventFilter(
-  traceAccumulatorActor: ActorRef,
-  val duplicatesRepository: DuplicatesRepository) extends Actor with ActorLogging with DuplicateDetection {
+class PlayEventFilter(traceAccumulatorActor: ActorRef) extends Actor with ActorLogging {
   import PlayEventFilter._
 
   lazy val duplicateAnalyzerName = self.path.name
@@ -33,21 +29,9 @@ class PlayEventFilter(
 
   def filterEvents(events: Seq[TraceEvent]): Unit = {
     val startTime = System.currentTimeMillis
-
-    val filteredEvents = events.filter { event ⇒
-      if (isInteresting(event)) {
-        val duplicatesTraceKey = DuplicatesTraceKey(duplicateAnalyzerName, event.id)
-        if (!exists(duplicatesTraceKey)) {
-          addDuplicate(duplicatesTraceKey)
-          true
-        } else false
-      } else false
-    }
-
+    val filteredEvents = events.filter { event ⇒ isInteresting(event) }.toSeq
     traceAccumulatorActor ! TraceEvents(filteredEvents)
-
-    log.debug("Filtered {} trace events. It took {} ms",
-      events.size, System.currentTimeMillis - startTime)
+    log.debug("Filtered {} trace events. It took {} ms", events.size, System.currentTimeMillis - startTime)
   }
 
 }

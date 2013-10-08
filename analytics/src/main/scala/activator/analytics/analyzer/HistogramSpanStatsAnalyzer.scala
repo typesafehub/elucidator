@@ -8,7 +8,6 @@ import akka.actor.ActorRef
 import activator.analytics.data._
 import activator.analytics.data.{ TimeRange, Span, Scope, HistogramSpanStats }
 import activator.analytics.metrics.HistogramMetric
-import activator.analytics.repository.DuplicatesRepository
 import activator.analytics.repository.HistogramSpanStatsRepository
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 
@@ -16,7 +15,6 @@ class HistogramSpanStatsAnalyzer(
   pathLevel: Option[Boolean],
   histogramSpanStatsRepository: HistogramSpanStatsRepository,
   val traceRepository: TraceRetrievalRepository,
-  val duplicatesRepository: DuplicatesRepository,
   val alertDispatcher: Option[ActorRef])
   extends SpanStatsAnalyzer with SpanStatsGrouping with ActorAnalyzerHelpers {
 

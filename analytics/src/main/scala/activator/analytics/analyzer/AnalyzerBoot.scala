@@ -3,10 +3,9 @@
  */
 package activator.analytics.analyzer
 
-import akka.actor.{ ActorContext, Props, ActorSystem, ActorRef }
+import akka.actor.ActorSystem
 import activator.analytics.repository._
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
-import scala.collection.mutable.ArrayBuffer
 
 /**
  * Common things to implement for the analyzer types (local and mongo).
@@ -16,7 +15,6 @@ trait AnalyzerBoot {
 
   def actorStatsRepository: ActorStatsRepository
   def dispatcherTimeSeriesRepository: DispatcherTimeSeriesRepository
-  def duplicatesRepository: DuplicatesRepository
   def errorStatsRepository: ErrorStatsRepository
   def histogramSpanStatsRepository: HistogramSpanStatsRepository
   def mailboxTimeSeriesRepository: MailboxTimeSeriesRepository

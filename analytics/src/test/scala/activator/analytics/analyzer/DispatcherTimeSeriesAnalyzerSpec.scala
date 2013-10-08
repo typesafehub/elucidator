@@ -5,7 +5,7 @@ package activator.analytics.analyzer
 
 import akka.actor._
 import activator.analytics.data.TimeRange
-import activator.analytics.repository.{ SimpleDuplicatesRepositoryCache, MemoryDispatcherTimeSeriesRepository }
+import activator.analytics.repository.MemoryDispatcherTimeSeriesRepository
 import com.typesafe.atmos.trace.store.MemoryTraceRepository
 import com.typesafe.atmos.trace.{ TraceEvents, TraceEvent, DispatcherStatus, DispatcherMetrics }
 import com.typesafe.atmos.util.AtmosSpec
@@ -15,14 +15,13 @@ import java.util.concurrent.CountDownLatch
 class DispatcherTimeSeriesAnalyzerSpec extends AtmosSpec with AnalyzeTest {
   val traceRepository = new MemoryTraceRepository
   var statsRepository: MemoryDispatcherTimeSeriesRepository = _
-  val cacheRepository = new SimpleDuplicatesRepositoryCache
   var analyzer: ActorRef = _
   val alertDispatcher: Option[ActorRef] = None
 
   override def beforeEach() {
     traceRepository.clear()
     statsRepository = new MemoryDispatcherTimeSeriesRepository
-    analyzer = system.actorOf(Props(new DispatcherTimeSeriesAnalyzer(statsRepository, traceRepository, cacheRepository, alertDispatcher)))
+    analyzer = system.actorOf(Props(new DispatcherTimeSeriesAnalyzer(statsRepository, traceRepository, alertDispatcher)))
   }
 
   override def afterEach() {

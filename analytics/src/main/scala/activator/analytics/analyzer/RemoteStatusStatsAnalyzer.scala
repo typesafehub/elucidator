@@ -5,7 +5,6 @@ package activator.analytics.analyzer
 
 import akka.actor.ActorRef
 import activator.analytics.data.{ TimeRange, RemoteStatusStatsMetrics, RemoteStatusStats }
-import activator.analytics.repository.DuplicatesRepository
 import activator.analytics.repository.RemoteStatusStatsRepository
 import com.typesafe.atmos.trace.{ RemoteStatus, RemotingLifecycle }
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
@@ -17,7 +16,6 @@ import scala.collection.mutable.{ Map ⇒ MutableMap }
 class RemoteStatusStatsAnalyzer(
   remoteStatusStatsRepository: RemoteStatusStatsRepository,
   val traceRepository: TraceRetrievalRepository,
-  val duplicatesRepository: DuplicatesRepository,
   val alertDispatcher: Option[ActorRef])
   extends EventStatsAnalyzer {
 

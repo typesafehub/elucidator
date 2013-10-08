@@ -3,12 +3,11 @@
  */
 package activator.analytics.analyzer
 
-import akka.actor.{ Actor, Props, ActorRef, PoisonPill, ActorLogging }
+import akka.actor.{ Props, ActorRef, PoisonPill }
 import com.typesafe.atmos.trace.{ TraceEvents, TraceEvent }
 import activator.analytics.common.TraceExample
 import com.typesafe.atmos.util.AtmosSpec
 import com.typesafe.atmos.uuid.UUID
-import activator.analytics.repository.{ SimpleDuplicatesRepositoryCache, DuplicatesRepository }
 import scala.concurrent._
 import scala.concurrent.duration._
 
@@ -28,8 +27,7 @@ class PlayEventFilterSpec extends AtmosSpec with AnalyzeTest {
   def withFilter(test: Seq[TraceEvent] ⇒ Boolean, flushAge: Long, within: Int = 5 * 1000, repoRetentionAge: Long = 60 * 1000L)(body: (ActorRef, Future[Boolean]) ⇒ Unit): Unit = {
     val result: Promise[Boolean] = Promise[Boolean]()
     val recipient: ActorRef = system.actorOf(Props(new TestEventuallyActor(within, result, test)))
-    val duplicatesRepository: DuplicatesRepository = new SimpleDuplicatesRepositoryCache
-    val filter: ActorRef = system.actorOf(Props(new PlayEventFilter(recipient, duplicatesRepository)))
+    val filter: ActorRef = system.actorOf(Props(new PlayEventFilter(recipient)))
     body(filter, result.future)
     recipient ! PoisonPill
     filter ! PoisonPill

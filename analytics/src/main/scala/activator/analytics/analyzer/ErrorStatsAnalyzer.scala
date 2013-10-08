@@ -5,7 +5,7 @@ package activator.analytics.analyzer
 
 import akka.actor.ActorRef
 import activator.analytics.data._
-import activator.analytics.repository.{ DuplicatesRepository, ErrorStatsRepository }
+import activator.analytics.repository.ErrorStatsRepository
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 import scala.collection.mutable.ArrayBuffer
@@ -13,7 +13,6 @@ import scala.collection.mutable.ArrayBuffer
 class ErrorStatsAnalyzer(
   errorStatsRepository: ErrorStatsRepository,
   val traceRepository: TraceRetrievalRepository,
-  val duplicatesRepository: DuplicatesRepository,
   val alertDispatcher: Option[ActorRef])
   extends EventStatsAnalyzer {
 

@@ -5,8 +5,6 @@ object Dependencies {
   lazy val analyticsDependencies = Seq(
     "com.typesafe.atmos"		  %% "atmos-event" 		    % "1.4.0-SNAPSHOT",
     "com.typesafe.atmos" 		  % "atmos-collect" 		  % "1.4.0-SNAPSHOT",
-    "net.sf.ehcache" 			    % "ehcache-core"		    % "2.6.6",
-    "javax.transaction"    		% "jta"                 % "1.1",
     "com.typesafe.inkan"    	%% "inkan"              % "0.1.2",
     "org.codehaus.jackson" 		% "jackson-core-asl"    % "1.9.9",
     "org.codehaus.jackson"  	% "jackson-mapper-asl"  % "1.9.9",

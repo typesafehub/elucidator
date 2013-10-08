@@ -5,7 +5,7 @@ package activator.analytics.analyzer
 
 import akka.actor._
 import activator.analytics.data.{ TimeRange, Scope }
-import activator.analytics.repository.{ SimpleDuplicatesRepositoryCache, MemoryMessageRateTimeSeriesRepository }
+import activator.analytics.repository.MemoryMessageRateTimeSeriesRepository
 import com.typesafe.atmos.trace.ActorInfo
 import com.typesafe.atmos.trace.ActorReceived
 import com.typesafe.atmos.trace.store.MemoryTraceRepository
@@ -18,7 +18,6 @@ import scala.concurrent.duration._
 class MessageRateTimeSeriesAnalyzerSpec extends AtmosSpec with AnalyzeTest {
 
   val traceRepository = new MemoryTraceRepository
-  val cacheRepository = new SimpleDuplicatesRepositoryCache
   var statsRepository: MemoryMessageRateTimeSeriesRepository = _
   var analyzer: ActorRef = _
   val alertDispatcher: Option[ActorRef] = None
@@ -27,7 +26,7 @@ class MessageRateTimeSeriesAnalyzerSpec extends AtmosSpec with AnalyzeTest {
     traceRepository.clear()
     statsRepository = new MemoryMessageRateTimeSeriesRepository
     statsRepository = new MemoryMessageRateTimeSeriesRepository
-    analyzer = system.actorOf(Props(new MessageRateTimeSeriesAnalyzer(None, statsRepository, traceRepository, cacheRepository, alertDispatcher)))
+    analyzer = system.actorOf(Props(new MessageRateTimeSeriesAnalyzer(None, statsRepository, traceRepository, alertDispatcher)))
   }
 
   override def afterEach() {

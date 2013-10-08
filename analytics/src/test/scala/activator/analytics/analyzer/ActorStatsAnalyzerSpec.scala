@@ -7,7 +7,6 @@ import akka.actor._
 import activator.analytics.data.{ TimeRange, Scope }
 import activator.analytics.metrics.RateMetric
 import activator.analytics.repository.MemoryActorStatsRepository
-import activator.analytics.repository.SimpleDuplicatesRepositoryCache
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.trace.store.MemoryTraceEventListener
 import com.typesafe.atmos.util.AtmosSpec
@@ -22,14 +21,13 @@ class ActorStatsAnalyzerSpec extends AtmosSpec(ActorStatsAnalyzerSpec.testConfig
   val traceRepository = MemoryTraceEventListener.getRepositoryFor(traceReceiver).getOrElse(
     throw new RuntimeException("Need to use MemoryTraceEventListener with " + system.name))
   var statsRepository: MemoryActorStatsRepository = _
-  val cacheRepository = new SimpleDuplicatesRepositoryCache
   var analyzer: ActorRef = _
   val alertDispatcher: Option[ActorRef] = None
 
   override def beforeEach() {
     traceRepository.clear()
     statsRepository = new MemoryActorStatsRepository
-    analyzer = system.actorOf(Props(new ActorStatsAnalyzer(None, statsRepository, traceRepository, cacheRepository, alertDispatcher)), "testAnalyzer")
+    analyzer = system.actorOf(Props(new ActorStatsAnalyzer(None, statsRepository, traceRepository, alertDispatcher)), "testAnalyzer")
   }
 
   override def afterEach() {

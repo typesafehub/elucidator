@@ -5,7 +5,7 @@ package activator.analytics.analyzer
 
 import akka.actor._
 import activator.analytics.data.TimeRange
-import activator.analytics.repository.{ SimpleDuplicatesRepositoryCache, MemoryRemoteStatusStatsRepository }
+import activator.analytics.repository.MemoryRemoteStatusStatsRepository
 import com.typesafe.atmos.trace.RemoteStatus
 import com.typesafe.atmos.trace.RemoteStatusType.RemoteClientWriteFailedType
 import com.typesafe.atmos.trace.store.MemoryTraceRepository
@@ -15,7 +15,6 @@ import java.util.concurrent.CountDownLatch
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
 class RemoteStatusStatsAnalyzerSpec extends AtmosSpec with AnalyzeTest {
-  val cacheRepository = new SimpleDuplicatesRepositoryCache
   val traceRepository = new MemoryTraceRepository
   var statsRepository: MemoryRemoteStatusStatsRepository = _
   var analyzer: ActorRef = _
@@ -24,7 +23,7 @@ class RemoteStatusStatsAnalyzerSpec extends AtmosSpec with AnalyzeTest {
   override def beforeEach() {
     traceRepository.clear()
     statsRepository = new MemoryRemoteStatusStatsRepository
-    analyzer = system.actorOf(Props(new RemoteStatusStatsAnalyzer(statsRepository, traceRepository, cacheRepository, alertDispatcher)))
+    analyzer = system.actorOf(Props(new RemoteStatusStatsAnalyzer(statsRepository, traceRepository, alertDispatcher)))
   }
 
   override def afterEach() {

@@ -8,7 +8,6 @@ import akka.actor.ActorRef
 import activator.analytics.data._
 import activator.analytics.data.Span
 import activator.analytics.metrics.{ LatestSample, UniformSample, PercentilesMetrics }
-import activator.analytics.repository.DuplicatesRepository
 import activator.analytics.repository.PercentilesSpanStatsRepository
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 import TimeRange.hourRange
@@ -17,7 +16,6 @@ class PercentilesSpanStatsAnalyzer(
   pathLevel: Option[Boolean],
   percentilesSpanStatsRepository: PercentilesSpanStatsRepository,
   val traceRepository: TraceRetrievalRepository,
-  val duplicatesRepository: DuplicatesRepository,
   val alertDispatcher: Option[ActorRef])
   extends SpanStatsAnalyzer with SpanStatsGrouping with ActorAnalyzerHelpers {
 
@@ -84,7 +82,6 @@ class PercentilesSpanStatsAnalyzer(
         case None      ⇒ combinations filter (group ⇒ reservoirSize(group.scope) > 0)
         case Some(use) ⇒ combinations filter { group ⇒ group.scope.path.isDefined == use && reservoirSize(group.scope) > 0 }
       }
-
     }
   }
 

@@ -8,42 +8,13 @@ import activator.analytics.analyzer.Analyzer.SimpleAck
 import activator.analytics.data._
 import activator.analytics.data.BasicTypes.Timestamp
 import activator.analytics.data.TimeRange._
-import activator.analytics.repository.DuplicatesKey
-import activator.analytics.repository.DuplicatesRepository
-import activator.analytics.repository.DuplicatesSpanKey
-import activator.analytics.repository.DuplicatesTraceKey
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 import java.util.concurrent.TimeUnit
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.{ Map ⇒ MutableMap }
-import scala.collection.mutable.{ Set ⇒ MutableSet }
 import scala.concurrent.forkjoin.ThreadLocalRandom
-
-trait DuplicateDetection { this: Actor ⇒
-  def duplicatesRepository: DuplicatesRepository
-  private val duplicates = MutableSet[DuplicatesKey]()
-  val useDuplicateCheck = AnalyzeExtension(context.system).StoreUseDuplicatesCache
-
-  def addDuplicate(key: DuplicatesKey): Unit = if (useDuplicateCheck) {
-    duplicates += key
-  }
-
-  def exists(key: DuplicatesKey): Boolean = {
-    (useDuplicateCheck && (duplicates.contains(key) || duplicatesRepository.contains(key)))
-  }
-
-  def clearDuplicates(): Unit = duplicates.clear()
-
-  def storeDuplicates(): Unit = {
-    if (useDuplicateCheck) {
-      // add them to duplicates repository as well
-      duplicatesRepository.store(duplicates.toSeq)
-    }
-  }
-
-}
 
 trait ActorAnalyzerHelpers { this: StatsAnalyzer ⇒
   def actorInfo(event: TraceEvent): Option[ActorInfo] = event.annotation match {
@@ -105,7 +76,7 @@ trait ActorAnalyzerHelpers { this: StatsAnalyzer ⇒
  * statistics is based on TraceEvent or Span there are more concrete
  * traits for the two types, SpanStatsAnalyzer and EventStatsAnalyzer.
  */
-trait StatsAnalyzer extends Actor with ActorLogging with DuplicateDetection {
+trait StatsAnalyzer extends Actor with ActorLogging {
   type STATS
   type GROUP
   type BUF <: StatsBuffer
@@ -157,7 +128,6 @@ trait StatsAnalyzer extends Actor with ActorLogging with DuplicateDetection {
   }
 
   def clearState() {
-
     previouslyTouched ++= currentlyTouched
     clearCurrentlyTouched()
 
@@ -171,8 +141,6 @@ trait StatsAnalyzer extends Actor with ActorLogging with DuplicateDetection {
       }
 
     }
-
-    clearDuplicates()
   }
 
   def purgeUnusedMillis: Long = StatsAnalyzer.PurgeUnusedMillis
@@ -228,8 +196,6 @@ trait StatsAnalyzer extends Actor with ActorLogging with DuplicateDetection {
       }.toMap
       statsStoreWorker ! StatsStoreWorkerJob(changedStats)
     }
-
-    storeDuplicates()
   }
 
   trait StatsBuffer {
@@ -296,8 +262,6 @@ trait SpanStatsAnalyzer extends StatsAnalyzer {
   def produceStatistics(spans: Seq[Span]) {
     val startTime = System.currentTimeMillis
 
-    spans.foreach(produceStatistics(_))
-
     spans.foreach { span ⇒
       produceStatistics(span)
       store(span.startTime)
@@ -310,20 +274,13 @@ trait SpanStatsAnalyzer extends StatsAnalyzer {
   }
 
   def produceStatistics(span: Span) {
-    val duplicatesSpanKey = DuplicatesSpanKey(duplicateAnalyzerName, span.spanTypeName, span.startEvent, span.endEvent)
-    if (!exists(duplicatesSpanKey)) {
-      for (group ← allGroups(span)) {
-        statsBufferFor(group) += span
-        addCurrentlyTouched(group, span.startTime)
-      }
-
-      addDuplicate(duplicatesSpanKey)
+    for (group ← allGroups(span)) {
+      statsBufferFor(group) += span
+      addCurrentlyTouched(group, span.startTime)
     }
   }
 
   def allGroups(span: Span): Seq[GROUP]
-
-  def duplicatesRepository: DuplicatesRepository
 
   trait SpanStatsBuffer extends StatsBuffer {
     def +=(span: Span): Unit
@@ -417,18 +374,11 @@ trait EventsWithPlayScope extends ActorAnalyzerHelpers { this: EventStatsAnalyze
    */
   def produceStatistics(event: TraceEvent): Boolean = {
     if (isInteresting(event) && !isTempActor(event)) {
-      val duplicatesTraceKey = DuplicatesTraceKey(duplicateAnalyzerName, event.id)
-      if (exists(duplicatesTraceKey)) {
-        false
-      } else {
-        for (group ← allGroups(event)) {
-          statsBufferFor(group) += event
-          addCurrentlyTouched(group, event.timestamp)
-        }
-
-        addDuplicate(duplicatesTraceKey)
-        true
+      for (group ← allGroups(event)) {
+        statsBufferFor(group) += event
+        addCurrentlyTouched(group, event.timestamp)
       }
+      true
     } else {
       false
     }
@@ -444,18 +394,11 @@ trait EventsNoPlayScope extends ActorAnalyzerHelpers { this: EventStatsAnalyzerB
    */
   def produceStatistics(event: TraceEvent): Boolean = {
     if (isInteresting(event) && !isTempActor(event)) {
-      val duplicatesTraceKey = DuplicatesTraceKey(duplicateAnalyzerName, event.id)
-      if (exists(duplicatesTraceKey)) {
-        false
-      } else {
-        for (group ← allGroups(event)) {
-          statsBufferFor(group) += event
-          addCurrentlyTouched(group, event.timestamp)
-        }
-
-        addDuplicate(duplicatesTraceKey)
-        true
+      for (group ← allGroups(event)) {
+        statsBufferFor(group) += event
+        addCurrentlyTouched(group, event.timestamp)
       }
+      true
     } else {
       false
     }

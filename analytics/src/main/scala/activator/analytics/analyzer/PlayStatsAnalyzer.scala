@@ -8,11 +8,9 @@ import akka.actor.{ ActorRef, Cancellable }
 import activator.analytics.data._
 import activator.analytics.data.BasicTypes._
 import activator.analytics.metrics.RateMetric
-import activator.analytics.repository.{ PlayStatsRepository, DuplicatesRepository }
+import activator.analytics.repository.PlayStatsRepository
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
-import java.util.concurrent.TimeUnit._
-import scala.collection.immutable.Queue
 import scala.collection.mutable.HashMap
 import scala.concurrent.duration._
 import scala.unchecked
@@ -26,7 +24,6 @@ class PlayStatsAnalyzer(
   autoFlushInterval: Long,
   playRequestSummaryStore: ActorRef,
   playStatsRepository: PlayStatsRepository,
-  val duplicatesRepository: DuplicatesRepository,
   val traceRepository: TraceRetrievalRepository) extends StatsAnalyzer with EventStatsGrouping {
   import PlayTraceTreeHelpers._
   import PlayStatsAnalyzer._

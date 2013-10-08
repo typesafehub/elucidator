@@ -8,7 +8,6 @@ import activator.analytics.data._
 import activator.analytics.data.BasicTypes.Timestamp
 import activator.analytics.data.TimeRange.minuteRange
 import activator.analytics.metrics.RateMetric
-import activator.analytics.repository.DuplicatesRepository
 import activator.analytics.repository.MessageRateTimeSeriesRepository
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
@@ -17,7 +16,6 @@ class MessageRateTimeSeriesAnalyzer(
   pathLevel: Option[Boolean],
   messageRateTimeSeriesRepository: MessageRateTimeSeriesRepository,
   val traceRepository: TraceRetrievalRepository,
-  val duplicatesRepository: DuplicatesRepository,
   val alertDispatcher: Option[ActorRef])
   extends EventStatsAnalyzer with EventStatsGrouping {
 

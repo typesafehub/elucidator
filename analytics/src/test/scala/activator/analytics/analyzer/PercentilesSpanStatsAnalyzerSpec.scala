@@ -5,7 +5,7 @@ package activator.analytics.analyzer
 
 import akka.actor.{ Props, ActorSystem, ActorRef, PoisonPill }
 import activator.analytics.data.{ TimeRange, Spans, Span, Scope }
-import activator.analytics.repository.{ SimpleDuplicatesRepositoryCache, MemoryPercentilesSpanStatsRepository }
+import activator.analytics.repository.MemoryPercentilesSpanStatsRepository
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.trace.store.MemoryTraceRepository
 import com.typesafe.atmos.util.AtmosSpec
@@ -17,7 +17,6 @@ import scala.concurrent.duration._
 class PercentilesSpanStatsAnalyzerSpec extends AtmosSpec with AnalyzeTest {
 
   val traceRepository = new MemoryTraceRepository
-  val cacheRepository = new SimpleDuplicatesRepositoryCache
   var statsRepository: MemoryPercentilesSpanStatsRepository = _
   var analyzer: ActorRef = _
   val alertDispatcher: Option[ActorRef] = None
@@ -25,7 +24,7 @@ class PercentilesSpanStatsAnalyzerSpec extends AtmosSpec with AnalyzeTest {
   override def beforeEach() {
     traceRepository.clear()
     statsRepository = new MemoryPercentilesSpanStatsRepository
-    analyzer = system.actorOf(Props(new PercentilesSpanStatsAnalyzer(None, statsRepository, traceRepository, cacheRepository, alertDispatcher)))
+    analyzer = system.actorOf(Props(new PercentilesSpanStatsAnalyzer(None, statsRepository, traceRepository, alertDispatcher)))
   }
 
   override def afterEach() {

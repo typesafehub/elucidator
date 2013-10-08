@@ -5,7 +5,6 @@ package activator.analytics.analyzer
 
 import akka.actor.ActorRef
 import activator.analytics.data._
-import activator.analytics.repository.DuplicatesRepository
 import activator.analytics.repository.SpanTimeSeriesRepository
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 
@@ -17,7 +16,6 @@ class SpanTimeSeriesAnalyzer(
   pathLevel: Option[Boolean],
   spanTimeSeriesRepository: SpanTimeSeriesRepository,
   val traceRepository: TraceRetrievalRepository,
-  val duplicatesRepository: DuplicatesRepository,
   val alertDispatcher: Option[ActorRef])
   extends SpanStatsAnalyzer with SpanStatsGrouping with ActorAnalyzerHelpers {
 

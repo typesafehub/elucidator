@@ -37,7 +37,7 @@ class Analyzer(boot: AnalyzerBoot) extends Actor with ActorLogging {
       import boot._
       Some(PlayAnalyzerConfiguration(context.system, context.actorOf(_, _), dispatcherId, settings.StoreFlushDelay, settings.AccumulatorFlushDelay,
         settings.PlayStatsFlushInterval, settings.PlayTraceTreePurgeInterval, settings.PlayRequestSummaryPurgeInterval, playStatsRepository, playRequestSummaryRepository,
-        duplicatesRepository, traceRepository, playTraceTreeRepository))
+        traceRepository, playTraceTreeRepository))
     } else None
 
   val eventListeners: Seq[ActorRef] = {
@@ -48,36 +48,36 @@ class Analyzer(boot: AnalyzerBoot) extends Actor with ActorLogging {
       val buf = ArrayBuffer[ActorRef]()
       if (settings.UseActorStatsAnalyzer) {
         (1 to 2) foreach { n ⇒
-          buf += context.actorOf(Props(new ActorStatsAnalyzer(Some(n == 1), actorStatsRepository, traceRepository, duplicatesRepository, alertDispatcher)).
+          buf += context.actorOf(Props(new ActorStatsAnalyzer(Some(n == 1), actorStatsRepository, traceRepository, alertDispatcher)).
             withDispatcher(dispatcherId), "actorStatsAnalyzer" + n)
         }
       }
       if (settings.UseMessageRateTimeSeriesAnalyzer) {
         (1 to 2) foreach { n ⇒
-          buf += context.actorOf(Props(new MessageRateTimeSeriesAnalyzer(Some(n == 1), messageRateTimeSeriesRepository, traceRepository, duplicatesRepository, alertDispatcher)).
+          buf += context.actorOf(Props(new MessageRateTimeSeriesAnalyzer(Some(n == 1), messageRateTimeSeriesRepository, traceRepository, alertDispatcher)).
             withDispatcher(dispatcherId), "messageRateTimeSeriesAnalyzer" + n)
         }
       }
       if (settings.UseRemoteStatusStatsAnalyzer) buf +=
-        context.actorOf(Props(new RemoteStatusStatsAnalyzer(remoteStatusStatsRepository, traceRepository, duplicatesRepository, alertDispatcher)).
+        context.actorOf(Props(new RemoteStatusStatsAnalyzer(remoteStatusStatsRepository, traceRepository, alertDispatcher)).
           withDispatcher(dispatcherId), "remoteStatusStatsAnalyzer")
       if (settings.UseMailboxTimeSeriesAnalyzer) buf +=
-        context.actorOf(Props(new MailboxTimeSeriesAnalyzer(mailboxTimeSeriesRepository, traceRepository, duplicatesRepository, alertDispatcher)).
+        context.actorOf(Props(new MailboxTimeSeriesAnalyzer(mailboxTimeSeriesRepository, traceRepository, alertDispatcher)).
           withDispatcher(dispatcherId), "mailboxTimeSeriesAnalyzer")
       if (settings.UseDispatcherTimeSeriesAnalyzer) buf +=
-        context.actorOf(Props(new DispatcherTimeSeriesAnalyzer(dispatcherTimeSeriesRepository, traceRepository, duplicatesRepository, alertDispatcher)).
+        context.actorOf(Props(new DispatcherTimeSeriesAnalyzer(dispatcherTimeSeriesRepository, traceRepository, alertDispatcher)).
           withDispatcher(dispatcherId), "dispatcherTimeSeriesAnalyzer")
       if (settings.UseSystemMetricsTimeSeriesAnalyzer) buf +=
-        context.actorOf(Props(new SystemMetricsTimeSeriesAnalyzer(systemMetricsTimeSeriesRepository, traceRepository, duplicatesRepository, alertDispatcher)).
+        context.actorOf(Props(new SystemMetricsTimeSeriesAnalyzer(systemMetricsTimeSeriesRepository, traceRepository, alertDispatcher)).
           withDispatcher(dispatcherId), "systemMetricsTimeSeriesAnalyzer")
       if (settings.UseErrorStatsAnalyzer) buf +=
-        context.actorOf(Props(new ErrorStatsAnalyzer(errorStatsRepository, traceRepository, duplicatesRepository, alertDispatcher)).
+        context.actorOf(Props(new ErrorStatsAnalyzer(errorStatsRepository, traceRepository, alertDispatcher)).
           withDispatcher(dispatcherId), "errorStatsAnalyzer")
       if (settings.UseRecordStatsAnalyzer) buf +=
-        context.actorOf(Props(new RecordStatsAnalyzer(recordStatsRepository, traceRepository, duplicatesRepository, alertDispatcher)).
+        context.actorOf(Props(new RecordStatsAnalyzer(recordStatsRepository, traceRepository, alertDispatcher)).
           withDispatcher(dispatcherId), "recordStatsAnalyzer")
       if (settings.UseMetadataStatsAnalyzer) buf +=
-        context.actorOf(Props(new MetadataStatsAnalyzer(metadataStatsRepository, traceRepository, duplicatesRepository, alertDispatcher)).
+        context.actorOf(Props(new MetadataStatsAnalyzer(metadataStatsRepository, traceRepository, alertDispatcher)).
           withDispatcher(dispatcherId), "metadataStatsAnalyzer")
 
       playAnalyzerConfig.foreach { c ⇒ buf += c.eventFilter }
@@ -94,25 +94,25 @@ class Analyzer(boot: AnalyzerBoot) extends Actor with ActorLogging {
       val buf = ArrayBuffer[ActorRef]()
       if (settings.UseSummarySpanStatsAnalyzer) {
         (1 to 2) foreach { n ⇒
-          buf += context.actorOf(Props(new SummarySpanStatsAnalyzer(Some(n == 1), summarySpanStatsRepository, traceRepository, duplicatesRepository, alertDispatcher)).
+          buf += context.actorOf(Props(new SummarySpanStatsAnalyzer(Some(n == 1), summarySpanStatsRepository, traceRepository, alertDispatcher)).
             withDispatcher(dispatcherId), "summarySpanStatsAnalyzer" + n)
         }
       }
       if (settings.UseHistogramSpanStatsAnalyzer) {
         (1 to 2) foreach { n ⇒
-          buf += context.actorOf(Props(new HistogramSpanStatsAnalyzer(Some(n == 1), histogramSpanStatsRepository, traceRepository, duplicatesRepository, alertDispatcher)).
+          buf += context.actorOf(Props(new HistogramSpanStatsAnalyzer(Some(n == 1), histogramSpanStatsRepository, traceRepository, alertDispatcher)).
             withDispatcher(dispatcherId), "histogramSpanStatsAnalyzer" + n)
         }
       }
       if (settings.UsePercentilesSpanStatsAnalyzer) {
         (1 to 2) foreach { n ⇒
-          buf += context.actorOf(Props(new PercentilesSpanStatsAnalyzer(Some(n == 1), percentilesSpanStatsRepository, traceRepository, duplicatesRepository, alertDispatcher)).
+          buf += context.actorOf(Props(new PercentilesSpanStatsAnalyzer(Some(n == 1), percentilesSpanStatsRepository, traceRepository, alertDispatcher)).
             withDispatcher(dispatcherId), "percentilesSpanStatsAnalyzer" + n)
         }
       }
       if (settings.UseSpanTimeSeriesAnalyzer) {
         (1 to 2) foreach { n ⇒
-          buf += context.actorOf(Props(new SpanTimeSeriesAnalyzer(Some(n == 1), spanTimeSeriesRepository, traceRepository, duplicatesRepository, alertDispatcher)).
+          buf += context.actorOf(Props(new SpanTimeSeriesAnalyzer(Some(n == 1), spanTimeSeriesRepository, traceRepository, alertDispatcher)).
             withDispatcher(dispatcherId), "spanTimeSeriesAnalyzer" + n)
         }
       }

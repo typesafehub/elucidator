@@ -4,7 +4,7 @@
 package activator.analytics.analyzer
 
 import akka.actor._
-import activator.analytics.repository.{ PlayStatsRepository, DuplicatesRepository, PlayTraceTreeRepository, PlayRequestSummaryRepository }
+import activator.analytics.repository.{ PlayStatsRepository, PlayTraceTreeRepository, PlayRequestSummaryRepository }
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 import scala.concurrent.duration._
 
@@ -19,14 +19,13 @@ object PlayAnalyzerConfiguration {
             playRequestSummaryPurgeInterval: Duration,
             playStatsRepository: PlayStatsRepository,
             playRequestSummaryRepository: PlayRequestSummaryRepository,
-            duplicatesRepository: DuplicatesRepository,
             traceRepository: TraceRetrievalRepository,
             playTraceTreeRepository: PlayTraceTreeRepository): PlayAnalyzerConfiguration = {
     val playRequestSummaryStore = actorOf(Props(new PlayRequestSummaryStore(playRequestSummaryPurgeInterval.toMillis, playRequestSummaryRepository)).withDispatcher(dispatcherId), "playRequestSummaryStore")
-    val playStatsAnalyzer = actorOf(Props(new PlayStatsAnalyzer(statsFlushDelay.toMillis, playRequestSummaryStore, playStatsRepository, duplicatesRepository, traceRepository)).withDispatcher(dispatcherId), "playStatsAnalyzer")
+    val playStatsAnalyzer = actorOf(Props(new PlayStatsAnalyzer(statsFlushDelay.toMillis, playRequestSummaryStore, playStatsRepository, traceRepository)).withDispatcher(dispatcherId), "playStatsAnalyzer")
     val traceTreeStore = actorOf(Props(new TraceTreeStore(storeFlushDelay.toMillis, traceTreePurgeInterval.toMillis, playTraceTreeRepository, playStatsAnalyzer)).withDispatcher(dispatcherId), "playTraceTreeStore")
     val traceAccumulator = actorOf(Props(new TraceAccumulator(accumulatorFlushDelay.toMillis, traceTreeStore)).withDispatcher(dispatcherId), "traceAccumulator")
-    val eventFilter = actorOf(Props(new PlayEventFilter(traceAccumulator, duplicatesRepository)).withDispatcher(dispatcherId), "playEventFilter")
+    val eventFilter = actorOf(Props(new PlayEventFilter(traceAccumulator)).withDispatcher(dispatcherId), "playEventFilter")
     new PlayAnalyzerConfiguration(system = system,
       playStatsAnalyzer = playStatsAnalyzer,
       traceTreeStore = traceTreeStore,

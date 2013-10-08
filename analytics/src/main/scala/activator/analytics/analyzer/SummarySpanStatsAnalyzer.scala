@@ -7,7 +7,6 @@ import akka.actor.ActorRef
 import collection.mutable.ArrayBuffer
 import activator.analytics.data._
 import activator.analytics.metrics.SummaryMetrics
-import activator.analytics.repository.DuplicatesRepository
 import activator.analytics.repository.SummarySpanStatsRepository
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 
@@ -15,7 +14,6 @@ class SummarySpanStatsAnalyzer(
   pathLevel: Option[Boolean],
   summarySpanStatsRepository: SummarySpanStatsRepository,
   val traceRepository: TraceRetrievalRepository,
-  val duplicatesRepository: DuplicatesRepository,
   val alertDispatcher: Option[ActorRef])
   extends SpanStatsAnalyzer with SpanStatsGrouping with ActorAnalyzerHelpers {
 

@@ -6,7 +6,6 @@ package activator.analytics.analyzer
 import akka.actor.ActorRef
 import activator.analytics.data.{ TimeRange, DispatcherTimeSeriesPoint, DispatcherTimeSeries }
 import activator.analytics.repository.DispatcherTimeSeriesRepository
-import activator.analytics.repository.DuplicatesRepository
 import com.typesafe.atmos.trace.DispatcherStatus
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 import com.typesafe.atmos.trace.TraceEvent
@@ -17,7 +16,6 @@ import TimeRange.minuteRange
 class DispatcherTimeSeriesAnalyzer(
   repository: DispatcherTimeSeriesRepository,
   val traceRepository: TraceRetrievalRepository,
-  val duplicatesRepository: DuplicatesRepository,
   val alertDispatcher: Option[ActorRef]) extends EventStatsAnalyzer {
 
   type STATS = DispatcherTimeSeries

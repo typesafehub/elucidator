@@ -8,7 +8,6 @@ import activator.analytics.data._
 import activator.analytics.data.BasicTypes.Timestamp
 import activator.analytics.data.TimeRange.minuteRange
 import activator.analytics.metrics.PairMetric
-import activator.analytics.repository.DuplicatesRepository
 import activator.analytics.repository.MailboxTimeSeriesRepository
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
@@ -16,7 +15,6 @@ import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 class MailboxTimeSeriesAnalyzer(
   mailboxTimeSeriesRepository: MailboxTimeSeriesRepository,
   val traceRepository: TraceRetrievalRepository,
-  val duplicatesRepository: DuplicatesRepository,
   val alertDispatcher: Option[ActorRef])
   extends EventStatsAnalyzer {
 

@@ -5,7 +5,7 @@ package activator.analytics.analyzer
 
 import akka.actor._
 import activator.analytics.data.{ TimeRange, Spans, Span, Scope }
-import activator.analytics.repository.{ SimpleDuplicatesRepositoryCache, MemorySummarySpanStatsRepository }
+import activator.analytics.repository.MemorySummarySpanStatsRepository
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.trace.Batch
 import com.typesafe.atmos.trace.store.MemoryTraceRepository
@@ -19,14 +19,13 @@ class SummarySpanStatsAnalyzerSpec extends AtmosSpec with AnalyzeTest {
 
   val traceRepository = new MemoryTraceRepository
   var statsRepository: MemorySummarySpanStatsRepository = _
-  val cacheRepository = new SimpleDuplicatesRepositoryCache
   var analyzer: ActorRef = _
   val alertDispatcher: Option[ActorRef] = None
 
   override def beforeEach() {
     traceRepository.clear()
     statsRepository = new MemorySummarySpanStatsRepository
-    analyzer = system.actorOf(Props(new SummarySpanStatsAnalyzer(None, statsRepository, traceRepository, cacheRepository, alertDispatcher)))
+    analyzer = system.actorOf(Props(new SummarySpanStatsAnalyzer(None, statsRepository, traceRepository, alertDispatcher)))
   }
 
   override def afterEach() {

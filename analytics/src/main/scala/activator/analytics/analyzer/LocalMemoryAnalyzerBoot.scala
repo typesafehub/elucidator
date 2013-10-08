@@ -8,7 +8,7 @@ import collection.mutable.ListBuffer
 import activator.analytics.repository._
 import com.typesafe.atmos.subscribe.SubscribeMessages.Ack
 import com.typesafe.atmos.trace._
-import com.typesafe.atmos.trace.store.{ MemoryTraceEventListener, MemoryTraceRepository }
+import com.typesafe.atmos.trace.store.MemoryTraceEventListener
 import com.typesafe.config.Config
 
 /**
@@ -28,7 +28,6 @@ class LocalMemoryAnalyzerBoot(val system: ActorSystem, receiver: Option[TraceRec
 
   val actorStatsRepository = LocalMemoryActorStatsRepository
   val dispatcherTimeSeriesRepository = LocalMemoryDispatcherTimeSeriesRepository
-  val duplicatesRepository = new DuplicatesRepositoryCache(system)
   val errorStatsRepository = LocalMemoryErrorStatsRepository
   val histogramSpanStatsRepository = LocalMemoryHistogramSpanStatsRepository
   val mailboxTimeSeriesRepository = LocalMemoryMailboxTimeSeriesRepository
