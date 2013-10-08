@@ -5,7 +5,6 @@ package activator.analytics.rest.http
 
 import akka.actor.{ Props, ActorSystem }
 import akka.io.IO
-import com.typesafe.inkan.TypesafeLicense
 import spray.can.Http
 
 object RestMain {
@@ -14,7 +13,7 @@ object RestMain {
   def main(args: Array[String]) {
     val i = getInterface(args)
     val p = getPort(args)
-    val handler = system.actorOf(Props(new GatewayActor(TypesafeLicense.fromDefaults())), "gatewayActor")
+    val handler = system.actorOf(Props[GatewayActor], "gatewayActor")
     IO(Http) ! Http.Bind(handler, interface = i, port = p)
   }
 

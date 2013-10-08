@@ -5,36 +5,20 @@ package activator.analytics.rest.http
 
 import akka.actor.{ Props, ActorLogging, Actor }
 import activator.analytics.rest.RestExtension
-import activator.analytics.rest.util.{ LicenseConverter, LicenseHandlerActor }
 import spray.can.Http
 import spray.http._
 import spray.http.HttpResponse
 import com.typesafe.atmos.trace.TraceEvent
-import com.typesafe.inkan.TypesafeLicense
 
 case class JRequest(req: HttpRequest)
 case class ResultPayload(json: String, headers: List[HttpHeader])
 
-class GatewayActor(license: Option[TypesafeLicense]) extends Actor with ActorLogging {
+class GatewayActor extends Actor with ActorLogging {
   import GatewayActor._
   val settings = RestExtension(context.system)
-  val repository = RepositoryFactory.repository(license, context.system, settings.Mode)
-
-  val licenseActor = context.actorOf(
-    Props(new LicenseHandlerActor(
-      LicenseConverter.convert(license),
-      repository.hostStatsRepository,
-      repository.metadataStatsRepository,
-      repository.summarySpanStatsRepository,
-      repository.errorStatsRepository,
-      repository.actorStatsRepository)),
-    "licenseActor")
-
+  val repository = RepositoryFactory.repository(context.system)
   val rootResource = context.actorOf(Props[RootResource], "rootResource")
-
   val dashboardResource = context.actorOf(Props[DashboardResource], "dashboardResource")
-  val licenseResource = context.actorOf(Props(new LicenseResource(license)), "licenseResource")
-
   val actorStatsResource = context.actorOf(Props(new ActorStatsResource(repository.actorStatsRepository)), "actorStatsResource")
   val actorStatsSortedResource = context.actorOf(Props(new ActorStatsSortedResource(repository.actorStatsRepository)), "actorStatsSortedResource")
   val dispatcherPointResource = context.actorOf(Props(new DispatcherPointResource(repository.dispatcherTimeSeriesRepository)), "dispatcherPointResource")
@@ -90,7 +74,6 @@ class GatewayActor(license: Option[TypesafeLicense]) extends Actor with ActorLog
     else if (uri.startsWith(RecordStatsUri)) Some(recordStatsResource)
     else if (uri.startsWith(PlayRequestSummaryUri)) Some(playRequestSummaryResource)
     else if (uri.startsWith(PlayStatsUri)) Some(playStatsResource)
-    else if (uri.startsWith(LicenseUri)) Some(licenseResource)
     else {
       sender ! HttpResponse(status = StatusCodes.BadRequest, entity = "Unknown URI: " + uri)
       None
