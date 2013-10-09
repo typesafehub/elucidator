@@ -5,11 +5,11 @@ package activator.analytics.rest.http
 
 import akka.actor.ActorSystem
 import activator.analytics.data.{ Scope, MessageRateTimeSeriesPoint, MessageRateTimeSeries }
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository.MessageRateTimeSeriesRepository
 import GatewayActor._
 import java.io.{ StringWriter, Writer }
 import spray.http.{ StatusCodes, HttpResponse, HttpRequest }
+import activator.analytics.AnalyticsExtension
 
 class MessageRatePointResource(messageRateTimeSeriesRepository: MessageRateTimeSeriesRepository) extends RestResourceActor with LatestPoint {
 
@@ -70,7 +70,7 @@ class MessageRatePointRepresentation(override val formatTimestamps: Boolean, sys
   }
 
   def writeJson(scope: Scope, point: MessageRateTimeSeriesPoint, writer: Writer) {
-    val generator = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val generator = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     generator.writeStartObject()
     writeJson(scope, generator)
     pointRepresentation.writeJson(point, generator)

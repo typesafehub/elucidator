@@ -9,6 +9,7 @@ import activator.analytics.repository.ErrorStatsRepository
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 import scala.collection.mutable.ArrayBuffer
+import activator.analytics.AnalyticsExtension
 
 class ErrorStatsAnalyzer(
   errorStatsRepository: ErrorStatsRepository,
@@ -89,7 +90,7 @@ class ErrorStatsAnalyzer(
     }
 
     def appendErrorDeviation(deviation: DeviationDetail) = {
-      if (errorDeviations.size >= AnalyzeExtension(context.system).MaxErrorDeviations) {
+      if (errorDeviations.size >= AnalyticsExtension(context.system).MaxErrorDeviations) {
         errorDeviations = errorDeviations.dropRight(1)
       }
 
@@ -97,7 +98,7 @@ class ErrorStatsAnalyzer(
     }
 
     def appendWarningDeviation(deviation: DeviationDetail) = {
-      if (warningDeviations.size >= AnalyzeExtension(context.system).MaxWarningDeviations) {
+      if (warningDeviations.size >= AnalyticsExtension(context.system).MaxWarningDeviations) {
         warningDeviations = warningDeviations.dropRight(1)
       }
 
@@ -105,7 +106,7 @@ class ErrorStatsAnalyzer(
     }
 
     def appendDeadLetterDeviation(deviation: DeviationDetail) = {
-      if (deadLetterDeviations.size >= AnalyzeExtension(context.system).MaxDeadLetterDeviations) {
+      if (deadLetterDeviations.size >= AnalyticsExtension(context.system).MaxDeadLetterDeviations) {
         deadLetterDeviations = deadLetterDeviations.dropRight(1)
       }
 
@@ -113,7 +114,7 @@ class ErrorStatsAnalyzer(
     }
 
     def appendUnhandledMessageDeviation(deviation: DeviationDetail) = {
-      if (unhandledMessageDeviations.size >= AnalyzeExtension(context.system).MaxUnhandledMessageDeviations) {
+      if (unhandledMessageDeviations.size >= AnalyticsExtension(context.system).MaxUnhandledMessageDeviations) {
         unhandledMessageDeviations = unhandledMessageDeviations.dropRight(1)
       }
 
@@ -121,7 +122,7 @@ class ErrorStatsAnalyzer(
     }
 
     def appendDeadlockedThreadsDeviation(deviation: DeviationDetail) = {
-      if (deadlockedThreadsDeviations.size >= AnalyzeExtension(context.system).MaxDeadlockDeviations) {
+      if (deadlockedThreadsDeviations.size >= AnalyticsExtension(context.system).MaxDeadlockDeviations) {
         deadlockedThreadsDeviations = deadlockedThreadsDeviations.dropRight(1)
       }
 

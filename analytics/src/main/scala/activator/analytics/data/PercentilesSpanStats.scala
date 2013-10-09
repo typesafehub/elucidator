@@ -6,7 +6,7 @@ package activator.analytics.data
 import akka.actor.ActorSystem
 import activator.analytics.data.BasicTypes.DurationNanos
 import com.typesafe.atmos.uuid.UUID
-import activator.analytics.analyzer.AnalyzeExtension
+import activator.analytics.AnalyticsExtension
 
 /**
  * Percentile statistics over the time period
@@ -24,7 +24,7 @@ case class PercentilesSpanStats(
 object PercentilesSpanStats {
 
   def defaultMap(implicit system: ActorSystem): Map[String, DurationNanos] = {
-    Map() ++ (for (p ← (AnalyzeExtension(system).Percentiles.toSeq)) yield (p, 0L))
+    Map() ++ (for (p ← (AnalyticsExtension(system).Percentiles.toSeq)) yield (p, 0L))
   }
 
   def apply(timeRange: TimeRange, scope: Scope, spanTypeName: String, n: Long = 0L, percentiles: Option[Map[String, DurationNanos]] = None, id: UUID = new UUID())(implicit system: ActorSystem) = {

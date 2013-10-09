@@ -15,6 +15,7 @@ import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.{ Map ⇒ MutableMap }
 import scala.concurrent.forkjoin.ThreadLocalRandom
+import activator.analytics.AnalyticsExtension
 
 trait ActorAnalyzerHelpers { this: StatsAnalyzer ⇒
   def actorInfo(event: TraceEvent): Option[ActorInfo] = event.annotation match {
@@ -95,10 +96,10 @@ trait StatsAnalyzer extends Actor with ActorLogging {
     withDispatcher(StatsAnalyzer.StatsStoreWorkerDispatcherId), name = "statsStoreWorker")
 
   var nextStoreTimestamp: Timestamp = 0L
-  val actorPathLevelTimeRanges = AnalyzeExtension(system).ActorPathTimeRanges
-  val storeTimeIntervalMillis = AnalyzeExtension(system).StoreTimeInterval
-  val storeLimit = AnalyzeExtension(system).StoreLimit
-  val useAllTime = AnalyzeExtension(system).StoreUseAllTime
+  val actorPathLevelTimeRanges = AnalyticsExtension(system).ActorPathTimeRanges
+  val storeTimeIntervalMillis = AnalyticsExtension(system).StoreTimeInterval
+  val storeLimit = AnalyticsExtension(system).StoreLimit
+  val useAllTime = AnalyticsExtension(system).StoreUseAllTime
 
   protected def updateNextStoreTimestamp(eventTimestamp: Timestamp): Unit = {
     nextStoreTimestamp = eventTimestamp + storeTimeIntervalMillis
@@ -204,7 +205,7 @@ trait StatsAnalyzer extends Actor with ActorLogging {
 
   class StatsStoreWorker(statsRepository: StatsRepository) extends Actor with ActorLogging {
     import context.dispatcher
-    val flushDelay = AnalyzeExtension(system).StoreFlushDelay
+    val flushDelay = AnalyticsExtension(system).StoreFlushDelay
     var latest = Map.empty[GROUP, STATS]
 
     override def preStart(): Unit =

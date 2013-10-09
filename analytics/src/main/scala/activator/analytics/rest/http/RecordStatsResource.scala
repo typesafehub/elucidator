@@ -5,12 +5,12 @@ package activator.analytics.rest.http
 
 import akka.actor.ActorSystem
 import activator.analytics.data.{ TimeRange, RecordStats }
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository.RecordStatsRepository
 import GatewayActor._
 import java.io.StringWriter
 import org.codehaus.jackson.JsonGenerator
 import spray.http.{ StatusCodes, HttpResponse, HttpRequest }
+import activator.analytics.AnalyticsExtension
 
 class RecordStatsResource(repository: RecordStatsRepository) extends RestResourceActor {
   import RecordStatsResource._
@@ -71,7 +71,7 @@ class RecordStatsJsonRepresentation(override val baseUrl: Option[String], overri
 
   def toJson(recordStats: RecordStats): String = {
     val writer = new StringWriter
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     writeJson(recordStats, gen)
     gen.flush()
     writer.toString
@@ -79,7 +79,7 @@ class RecordStatsJsonRepresentation(override val baseUrl: Option[String], overri
 
   def toJson(stats: Iterable[RecordStats]): String = {
     val writer = new StringWriter
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     gen.writeStartArray()
     for (s ← stats) writeJson(s, gen)
     gen.writeEndArray()

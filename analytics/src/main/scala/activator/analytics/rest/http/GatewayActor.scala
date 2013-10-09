@@ -4,18 +4,18 @@
 package activator.analytics.rest.http
 
 import akka.actor.{ Props, ActorLogging, Actor }
-import activator.analytics.rest.RestExtension
 import spray.can.Http
 import spray.http._
 import spray.http.HttpResponse
 import com.typesafe.atmos.trace.TraceEvent
+import activator.analytics.AnalyticsExtension
 
 case class JRequest(req: HttpRequest)
 case class ResultPayload(json: String, headers: List[HttpHeader])
 
 class GatewayActor extends Actor with ActorLogging {
   import GatewayActor._
-  val settings = RestExtension(context.system)
+  val settings = AnalyticsExtension(context.system)
   val repository = new LocalMemoryAtmosRepository(context.system)
   val rootResource = context.actorOf(Props[RootResource], "rootResource")
   val dashboardResource = context.actorOf(Props[DashboardResource], "dashboardResource")

@@ -4,11 +4,11 @@
 package activator.analytics.rest.http
 
 import akka.actor.{ ActorSystem, Actor, ActorLogging }
-import activator.analytics.rest.RestExtension
 import java.io.StringWriter
 import java.io.Writer
 import org.codehaus.jackson.JsonGenerator
 import spray.http.{ HttpResponse, HttpRequest }
+import activator.analytics.AnalyticsExtension
 
 class RootResource extends Actor with ActorLogging with FileContentResource {
   import GatewayActor._
@@ -36,7 +36,7 @@ class RootJsonRepresentation(override val baseUrl: Option[String], system: Actor
   }
 
   def writeJson(writer: Writer) {
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     gen.writeStartObject()
     writeGeneralDescription(gen)
     gen.writeArrayFieldStart("resources")

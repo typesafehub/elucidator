@@ -5,7 +5,6 @@ package activator.analytics.rest.http
 
 import akka.actor.ActorSystem
 import activator.analytics.data.{ TimeRangeType, TimeRange, PlayRequestSummary }
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository.PlayRequestSummaryRepository
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.uuid.UUID
@@ -15,11 +14,12 @@ import java.io.StringWriter
 import org.codehaus.jackson.JsonGenerator
 import spray.http.{ StatusCodes, HttpRequest, HttpResponse }
 import PlayRequestSummaryResource._
+import activator.analytics.AnalyticsExtension
 
 class PlayRequestSummaryResource(playRequestSummaryRepository: PlayRequestSummaryRepository,
                                  traceRepository: TraceRetrievalRepository) extends RestResourceActor {
 
-  val queryBuilder = new QueryBuilder(RestExtension(context.system).PagingSize)
+  val queryBuilder = new QueryBuilder(AnalyticsExtension(context.system).PagingSize)
 
   def handle(req: HttpRequest): HttpResponse = {
     val path = req.uri.path.toString
@@ -229,7 +229,7 @@ class PlayRequestSummaryRepresentation(
     case None ⇒ "{}"
     case Some(requestSummary) ⇒
       val writer = new StringWriter
-      val generator = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+      val generator = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
       writeJson(requestSummary, actorInfo, generator)
       generator.flush()
       writer.toString
@@ -287,7 +287,7 @@ class PlayRequestSummariesRepresentation(
 
   def toJson(requestSummaries: Seq[(PlayRequestSummary, Set[ActorInfo])], timeRange: TimeRange, paging: Paging): String = {
     val writer = new StringWriter
-    val generator = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val generator = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     writeJson(requestSummaries, timeRange, paging, generator)
     generator.flush()
     writer.toString

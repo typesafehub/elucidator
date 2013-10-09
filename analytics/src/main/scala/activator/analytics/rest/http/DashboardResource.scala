@@ -4,12 +4,12 @@
 package activator.analytics.rest.http
 
 import akka.actor.ActorSystem
-import activator.analytics.rest.RestExtension
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStreamReader
 import spray.http._
+import activator.analytics.AnalyticsExtension
 
 class DashboardResource extends RestResourceActor with FileContentResource {
 
@@ -36,7 +36,7 @@ trait FileContentResource {
 
   def handleFile(req: HttpRequest, system: ActorSystem): HttpResponse = {
     def fileReader(fileName: String): Either[String, BufferedReader] = {
-      val file = new File(RestExtension(system).HtmlFileResources, fileName)
+      val file = new File(AnalyticsExtension(system).HtmlFileResources, fileName)
       val in =
         if (file.exists) new FileInputStream(file)
         else getClass.getResourceAsStream("/html/" + fileName)

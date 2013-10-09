@@ -6,10 +6,10 @@ package activator.analytics.rest.http
 import akka.actor.ActorSystem
 import activator.analytics.data.{ TimeRange, DispatcherTimeSeriesPoint, DispatcherTimeSeries }
 import activator.analytics.repository.DispatcherTimeSeriesRepository
-import activator.analytics.rest.RestExtension
 import java.io.{ Writer, StringWriter }
 import org.codehaus.jackson.JsonGenerator
 import spray.http.{ StatusCodes, HttpRequest, HttpResponse }
+import activator.analytics.AnalyticsExtension
 
 class DispatcherTimeSeriesResource(dispatcherTimeSeriesRepository: DispatcherTimeSeriesRepository)
   extends RestResourceActor with TimeSeriesSampling[DispatcherTimeSeriesPoint] {
@@ -20,7 +20,7 @@ class DispatcherTimeSeriesResource(dispatcherTimeSeriesRepository: DispatcherTim
   def jsonRepresentation(request: HttpRequest) = new DispatcherTimeSeriesRepresentation(formatTimestamps(request), context.system)
 
   final val queryBuilder = new QueryBuilder
-  override val configMaxPoints = RestExtension(context.system).MaxTimeriesPoints
+  override val configMaxPoints = AnalyticsExtension(context.system).MaxTimeriesPoints
 
   def handle(req: HttpRequest): HttpResponse = {
     queryBuilder.build(req.uri.path.toString, req.uri.query.toString) match {
@@ -82,14 +82,14 @@ class DispatcherTimeSeriesRepresentation(override val formatTimestamps: Boolean,
   val pointRepresentation = new DispatcherTimeSeriesPointRepresentation(formatTimestamps, system)
 
   def toJson(stats: DispatcherTimeSeries, writer: Writer) = {
-    val generator = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val generator = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     writeJson(stats, generator)
     generator.flush()
   }
 
   def toJson(stats: DispatcherTimeSeries): String = {
     val writer = new StringWriter
-    val generator = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val generator = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     writeJson(stats, generator)
     generator.flush()
     writer.toString
@@ -116,7 +116,7 @@ class DispatcherTimeSeriesRepresentation(override val formatTimestamps: Boolean,
 class DispatcherTimeSeriesPointRepresentation(override val formatTimestamps: Boolean, system: ActorSystem) extends JsonRepresentation {
   def toJson(point: DispatcherTimeSeriesPoint): String = {
     val writer = new StringWriter
-    val generator = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val generator = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     writeJson(point, generator)
     generator.flush()
     writer.toString

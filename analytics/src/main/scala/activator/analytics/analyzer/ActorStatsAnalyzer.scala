@@ -14,6 +14,7 @@ import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 
 import java.util.concurrent.TimeUnit._
 import scala.collection.immutable.Queue
+import activator.analytics.AnalyticsExtension
 
 class ActorStatsAnalyzer(
   pathLevel: Option[Boolean],
@@ -261,7 +262,7 @@ class ActorStatsAnalyzer(
     }
 
     def appendErrorDeviation(deviation: DeviationDetail) = {
-      if (errorDeviations.size >= AnalyzeExtension(context.system).MaxErrorDeviations) {
+      if (errorDeviations.size >= AnalyticsExtension(context.system).MaxErrorDeviations) {
         errorDeviations = errorDeviations.dropRight(1)
       }
 
@@ -269,7 +270,7 @@ class ActorStatsAnalyzer(
     }
 
     def appendWarningDeviation(deviation: DeviationDetail) = {
-      if (warningDeviations.size >= AnalyzeExtension(context.system).MaxWarningDeviations) {
+      if (warningDeviations.size >= AnalyticsExtension(context.system).MaxWarningDeviations) {
         warningDeviations = warningDeviations.dropRight(1)
       }
 
@@ -277,7 +278,7 @@ class ActorStatsAnalyzer(
     }
 
     def appendDeadLetterDeviation(deviation: DeviationDetail) = {
-      if (deadLetterDeviations.size >= AnalyzeExtension(context.system).MaxDeadLetterDeviations) {
+      if (deadLetterDeviations.size >= AnalyticsExtension(context.system).MaxDeadLetterDeviations) {
         deadLetterDeviations = deadLetterDeviations.dropRight(1)
       }
 
@@ -285,7 +286,7 @@ class ActorStatsAnalyzer(
     }
 
     def appendUnhandledMessageDeviation(deviation: DeviationDetail) = {
-      if (unhandledMessageDeviations.size >= AnalyzeExtension(context.system).MaxUnhandledMessageDeviations) {
+      if (unhandledMessageDeviations.size >= AnalyticsExtension(context.system).MaxUnhandledMessageDeviations) {
         unhandledMessageDeviations = unhandledMessageDeviations.dropRight(1)
       }
 

@@ -5,19 +5,19 @@ package activator.analytics.rest.http
 
 import akka.actor.ActorSystem
 import activator.analytics.data._
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository.{ ActorStatsRepository, ActorStatsSorted }
 import GatewayActor._
 import java.io.StringWriter
 import org.codehaus.jackson.JsonGenerator
 import spray.http.{ StatusCodes, HttpResponse, HttpRequest }
+import activator.analytics.AnalyticsExtension
 
 class ActorStatsSortedResource(repository: ActorStatsRepository) extends RestResourceActor {
   import ActorStatsSortedResource._
 
-  final val restExtension = RestExtension(context.system)
+  final val analyticsExtension = AnalyticsExtension(context.system)
 
-  final val queryBuilder = new QueryBuilder(restExtension.DefaultLimit)
+  final val queryBuilder = new QueryBuilder(analyticsExtension.DefaultLimit)
 
   def jsonRepresentation(request: HttpRequest) =
     new ActorStatsSortedJsonRepresentation(baseUrl(request), formatTimestamps(request), context.system)
@@ -29,8 +29,8 @@ class ActorStatsSortedResource(repository: ActorStatsRepository) extends RestRes
           timeRange = query.timeRange,
           scope = query.scope,
           sortOn = query.sortOn,
-          includeAnonymous = restExtension.IncludeAnonymousActorPathsInMetadata,
-          includeTemp = restExtension.IncludeTempActorPathsInMetadata,
+          includeAnonymous = analyticsExtension.IncludeAnonymousActorPathsInMetadata,
+          includeTemp = analyticsExtension.IncludeTempActorPathsInMetadata,
           offset = query.offset,
           limit = query.limit)
         HttpResponse(entity = jsonRepresentation(req).toJson(stats), headers = HeadersBuilder.headers(query.timeRange.endTime)).asJson
@@ -85,7 +85,7 @@ class ActorStatsSortedJsonRepresentation(
 
   def toJson(sortedStats: ActorStatsSorted): String = {
     val writer = new StringWriter
-    val generator = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val generator = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     writeJson(sortedStats, generator)
     generator.flush()
     writer.toString

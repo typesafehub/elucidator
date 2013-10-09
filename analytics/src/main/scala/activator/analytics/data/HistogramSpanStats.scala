@@ -8,7 +8,7 @@ import activator.analytics.metrics.HistogramMetric
 import com.typesafe.atmos.uuid.UUID
 import java.util.concurrent.TimeUnit.MICROSECONDS
 import scala.concurrent.duration._
-import activator.analytics.analyzer.AnalyzeExtension
+import activator.analytics.AnalyticsExtension
 
 /**
  * Histogram statistics over the time period for the durations of the spans
@@ -47,7 +47,7 @@ object HistogramSpanStats {
    * e.g. atmos.analytics.bucketBoundariesMicros.mailbox.
    */
   def DefaultBucketBoundaries(implicit system: ActorSystem): IndexedSeq[Long] = {
-    mapConfigBucketBoundaries(AnalyzeExtension(system).DefaultStorageBucketBoundariesMicros)
+    mapConfigBucketBoundaries(AnalyticsExtension(system).DefaultStorageBucketBoundariesMicros)
   }
 
   private def mapConfigBucketBoundaries(definition: String) = {

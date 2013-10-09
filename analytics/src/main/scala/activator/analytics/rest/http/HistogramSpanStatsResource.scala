@@ -6,7 +6,6 @@ package activator.analytics.rest.http
 import akka.actor.ActorSystem
 import activator.analytics.data.{ TimeRange, SpanType, Scope, HistogramSpanStats }
 import activator.analytics.metrics.HistogramMetric
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository.HistogramSpanStatsRepository
 import GatewayActor._
 import HistogramSpanStatsResource.QueryBuilder
@@ -14,6 +13,7 @@ import java.io.StringWriter
 import java.io.Writer
 import scala.concurrent.duration._
 import spray.http.{ StatusCodes, HttpRequest, HttpResponse }
+import activator.analytics.AnalyticsExtension
 
 class HistogramSpanStatsResource(repository: HistogramSpanStatsRepository) extends RestResourceActor {
 
@@ -85,7 +85,7 @@ class HistogramSpanStatsJsonRepresentation(override val formatTimestamps: Boolea
   }
 
   def writeJson(histogramSpanStats: HistogramSpanStats, writer: Writer) {
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     gen.writeStartObject()
 
     writeJson(histogramSpanStats.timeRange, gen)

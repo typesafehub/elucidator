@@ -5,7 +5,6 @@ package activator.analytics.rest.http
 
 import akka.actor.{ ActorSystem, Actor }
 import activator.analytics.data.{ TimeRangeType, TimeRange, SpanType, Span }
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository.SpanRepository
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.uuid.UUID
@@ -16,10 +15,11 @@ import org.codehaus.jackson.JsonGenerator
 import spray.http.{ StatusCodes, HttpRequest, HttpResponse }
 import store.TraceRetrievalRepository
 import TraceEventResource._
+import activator.analytics.AnalyticsExtension
 
 class TraceEventResource(traceRepository: TraceRetrievalRepository, spanRepository: SpanRepository) extends RestResourceActor {
 
-  val queryBuilder = new QueryBuilder(RestExtension(context.system).PagingSize)
+  val queryBuilder = new QueryBuilder(AnalyticsExtension(context.system).PagingSize)
 
   def handle(req: HttpRequest): HttpResponse = {
     val path = req.uri.path.toString
@@ -222,7 +222,7 @@ class TraceEventRepresentation(
     case None ⇒ "{}"
     case Some(traceEvent) ⇒
       val writer = new StringWriter
-      val generator = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+      val generator = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
       writeJson(traceEvent, generator)
       generator.flush()
       writer.toString
@@ -542,7 +542,7 @@ class TraceEventsRepresentation(
 
   def toJson(traceEvents: Seq[TraceEvent], timeRange: TimeRange, paging: Paging): String = {
     val writer = new StringWriter
-    val generator = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val generator = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     writeJson(traceEvents, timeRange, paging, generator)
     generator.flush()
     writer.toString
@@ -580,7 +580,7 @@ class TraceTreeRepresentation(
 
   def toJson(traceTree: TraceTree): String = {
     val writer = new StringWriter
-    val generator = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val generator = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     writeJson(traceTree, generator)
     generator.flush()
     writer.toString
@@ -618,7 +618,7 @@ class TraceRepresentation(
 
   def toJson(traceEvents: Seq[TraceEvent]): String = {
     val writer = new StringWriter
-    val generator = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val generator = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     writeJson(traceEvents, generator)
     generator.flush()
     writer.toString
@@ -645,7 +645,7 @@ class SpanRepresentation(
     case None ⇒ "{}"
     case Some(span) ⇒
       val writer = new StringWriter
-      val generator = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+      val generator = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
       writeJson(span, generator)
       generator.flush()
       writer.toString
@@ -676,7 +676,7 @@ class SpansRepresentation(
 
   def toJson(spans: Seq[Span], timeRange: TimeRange, paging: Paging): String = {
     val writer = new StringWriter
-    val generator = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val generator = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     writeJson(spans, timeRange, paging, generator)
     generator.flush()
     writer.toString

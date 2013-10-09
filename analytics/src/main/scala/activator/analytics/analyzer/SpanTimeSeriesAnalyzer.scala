@@ -11,6 +11,7 @@ import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 import java.util.concurrent.TimeUnit
 import scala.collection.mutable.ArrayBuffer
 import TimeRange.minuteRange
+import activator.analytics.AnalyticsExtension
 
 class SpanTimeSeriesAnalyzer(
   pathLevel: Option[Boolean],
@@ -27,9 +28,9 @@ class SpanTimeSeriesAnalyzer(
     case Some(false) ⇒ "AggregatedLevel"
   })
 
-  val ignoreSpanTimeSeries = AnalyzeExtension(system).IgnoreSpanTimeSeries
+  val ignoreSpanTimeSeries = AnalyticsExtension(system).IgnoreSpanTimeSeries
 
-  val ignoreAggreagatedSpanTimeSeries = AnalyzeExtension(system).IgnoreAggregatedSpanTimeSeries
+  val ignoreAggreagatedSpanTimeSeries = AnalyticsExtension(system).IgnoreAggregatedSpanTimeSeries
 
   override def purgeUnusedMillis: Long = TimeUnit.MILLISECONDS.convert(2, TimeUnit.MINUTES)
 

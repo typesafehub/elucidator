@@ -5,13 +5,13 @@ package activator.analytics.rest.http
 
 import akka.actor.ActorSystem
 import activator.analytics.data.{ TimeRange, Scope, MessageRateTimeSeriesPoint, MessageRateTimeSeries }
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository.MessageRateTimeSeriesRepository
 import java.io.StringWriter
 import java.io.Writer
 import MessageRateTimeSeriesResource.QueryBuilder
 import org.codehaus.jackson.JsonGenerator
 import spray.http.{ StatusCodes, HttpResponse, HttpRequest }
+import activator.analytics.AnalyticsExtension
 
 class MessageRateTimeSeriesResource(repository: MessageRateTimeSeriesRepository)
   extends RestResourceActor with TimeSeriesSampling[MessageRateTimeSeriesPoint] {
@@ -23,7 +23,7 @@ class MessageRateTimeSeriesResource(repository: MessageRateTimeSeriesRepository)
   def jsonRepresentation(request: HttpRequest) =
     new MessageRateTimeSeriesJsonRepresentation(formatTimestamps(request), context.system)
 
-  override val configMaxPoints = RestExtension(context.system).MaxTimeriesPoints
+  override val configMaxPoints = AnalyticsExtension(context.system).MaxTimeriesPoints
 
   def handle(req: HttpRequest): HttpResponse = {
     queryBuilder.build(req.uri.path.toString, req.uri.query.toString) match {
@@ -82,7 +82,7 @@ class MessageRateTimeSeriesJsonRepresentation(override val formatTimestamps: Boo
   }
 
   def writeJson(timeSeries: MessageRateTimeSeries, writer: Writer) {
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     gen.writeStartObject()
 
     writeJson(timeSeries.timeRange, gen)

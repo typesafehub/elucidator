@@ -11,6 +11,7 @@ import activator.analytics.metrics.{ LatestSample, UniformSample, PercentilesMet
 import activator.analytics.repository.PercentilesSpanStatsRepository
 import com.typesafe.atmos.trace.store.TraceRetrievalRepository
 import TimeRange.hourRange
+import activator.analytics.AnalyticsExtension
 
 class PercentilesSpanStatsAnalyzer(
   pathLevel: Option[Boolean],
@@ -27,9 +28,9 @@ class PercentilesSpanStatsAnalyzer(
     case Some(false) ⇒ "AggregatedLevel"
   })
 
-  lazy val percentilesDoubles = AnalyzeExtension(system).Percentiles.map(_.toDouble / 100)
+  lazy val percentilesDoubles = AnalyticsExtension(system).Percentiles.map(_.toDouble / 100)
 
-  override val storeTimeIntervalMillis = AnalyzeExtension(system).PercentilesStoreTimeInterval
+  override val storeTimeIntervalMillis = AnalyticsExtension(system).PercentilesStoreTimeInterval
 
   val statsRepository: StatsRepository = new StatsRepository {
     def save(stats: Iterable[PercentilesSpanStats]): Unit = {
@@ -50,8 +51,8 @@ class PercentilesSpanStatsAnalyzer(
   }
 
   def reservoirSize(scope: Scope): Int = scope.path match {
-    case None    ⇒ AnalyzeExtension(system).PercentilesSampleReservoirSize
-    case Some(_) ⇒ AnalyzeExtension(system).PercentilesSampleReservoirSizeIndividualActor
+    case None    ⇒ AnalyticsExtension(system).PercentilesSampleReservoirSize
+    case Some(_) ⇒ AnalyticsExtension(system).PercentilesSampleReservoirSizeIndividualActor
   }
 
   def allGroups(span: Span): Seq[GroupBy] = {
@@ -109,7 +110,7 @@ class PercentilesSpanStatsAnalyzer(
 
     def toStats = {
       val percentilesValues = metrics.percentiles(percentilesDoubles).map(_.toLong)
-      val percentilesMap = Map() ++ AnalyzeExtension(system).Percentiles.toSeq.zip(percentilesValues)
+      val percentilesMap = Map() ++ AnalyticsExtension(system).Percentiles.toSeq.zip(percentilesValues)
       PercentilesSpanStats(
         initial.timeRange,
         initial.scope,

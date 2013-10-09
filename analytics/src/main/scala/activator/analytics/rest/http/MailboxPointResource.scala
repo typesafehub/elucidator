@@ -5,11 +5,11 @@ package activator.analytics.rest.http
 
 import akka.actor.ActorSystem
 import activator.analytics.data.{ MailboxTimeSeriesPoint, MailboxTimeSeries }
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository.MailboxTimeSeriesRepository
 import GatewayActor._
 import java.io.{ StringWriter, Writer }
 import spray.http.{ StatusCodes, HttpResponse, HttpRequest }
+import activator.analytics.AnalyticsExtension
 
 class MailboxPointResource(mailboxTimeSeriesRepository: MailboxTimeSeriesRepository) extends RestResourceActor with LatestPoint {
 
@@ -66,7 +66,7 @@ class MailboxPointRepresentation(override val formatTimestamps: Boolean, system:
   }
 
   def writeJson(actorPath: String, point: MailboxTimeSeriesPoint, writer: Writer) = {
-    val generator = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val generator = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     generator.writeStartObject()
     generator.writeStringField("actorPath", actorPath)
     pointRepresentation.writeJson(point, generator)

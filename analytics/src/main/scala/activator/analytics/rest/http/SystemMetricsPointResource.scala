@@ -5,11 +5,11 @@ package activator.analytics.rest.http
 
 import akka.actor.ActorSystem
 import activator.analytics.data.{ SystemMetricsTimeSeriesPoint, SystemMetricsTimeSeries }
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository.SystemMetricsTimeSeriesRepository
 import GatewayActor._
 import java.io.{ StringWriter, Writer }
 import spray.http.{ StatusCodes, HttpResponse, HttpRequest }
+import activator.analytics.AnalyticsExtension
 
 class SystemMetricsPointResource(systemMetricsTimeSeriesRepository: SystemMetricsTimeSeriesRepository)
   extends RestResourceActor with LatestPoint {
@@ -65,7 +65,7 @@ class SystemMetricsPointRepresentation(override val formatTimestamps: Boolean, s
   }
 
   def writeJson(node: String, point: SystemMetricsTimeSeriesPoint, writer: Writer) = {
-    val generator = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val generator = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     generator.writeStartObject()
     generator.writeStringField("node", node)
     pointRepresentation.writeJson(point, generator)

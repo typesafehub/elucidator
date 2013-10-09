@@ -1,22 +1,23 @@
 /**
- *  Copyright (C) 2011-2013 Typesafe <http://typesafe.com/>
+ * Copyright (C) 2011-2013 Typesafe <http://typesafe.com/>
  */
-package activator.analytics.analyzer
+package activator.analytics
 
-import akka.actor._
+import scala.concurrent.duration.Duration
 import java.util.concurrent.TimeUnit
-import scala.concurrent.duration._
+import akka.actor.{ ExtensionIdProvider, ExtensionId, Extension, ExtendedActorSystem }
 
-class StandardAnalyzeExtension(system: ExtendedActorSystem) extends Extension {
+class StandardAnalyticsExtension(system: ExtendedActorSystem) extends Extension {
   val config = system.settings.config
   import config._
   import scala.collection.JavaConverters._
 
-  val DefaultStorageBucketBoundariesMicros = getString("atmos.analytics.storage-bucket-boundaries-micros.default")
-  val Partition = getString("atmos.analytics.partition")
+  // ** ANALYZE RELATED **
 
   val AccumulatorFlushDelay = Duration(getMilliseconds("atmos.analytics.accumulator-flush-delay"), TimeUnit.MILLISECONDS)
   val ActorPathTimeRanges: Set[String] = getStringList("atmos.analytics.actor-path-time-ranges").asScala.toSet
+  val DefaultStorageBucketBoundariesMicros = getString("atmos.analytics.storage-bucket-boundaries-micros.default")
+  val Partition = getString("atmos.analytics.partition")
   val IgnoreAggregatedSpanTimeSeries: Set[String] = getStringList("atmos.analytics.ignore-aggregated-span-time-series").asScala.toSet
   val IgnoreSpanTimeSeries: Set[String] = getStringList("atmos.analytics.ignore-span-time-series").asScala.toSet
   val IgnoreSpanTypes: Set[String] = getStringList("atmos.analytics.ignore-span-types").asScala.toSet
@@ -40,14 +41,11 @@ class StandardAnalyzeExtension(system: ExtendedActorSystem) extends Extension {
   val StoreTimeInterval = getLong("atmos.analytics.store-time-interval")
   val StoreUseAllTime = getBoolean("atmos.analytics.store-use-all-time")
   val UseNanoTimeCrossNodes = getBoolean("atmos.analytics.use-nano-time-cross-nodes")
-
   val MaxRetryAttempts = getInt("atmos.analytics.max-retry-attempts")
   val RetryDelay = Duration(getMilliseconds("atmos.analytics.retry-delay"), TimeUnit.MILLISECONDS)
   val SaveSpans = getBoolean("atmos.analytics.save-spans")
-
   val FailoverTimeout = Duration(getMilliseconds("atmos.subscribe.failover-timeout"), TimeUnit.MILLISECONDS)
   val NotificationEventLogSize = getLong("atmos.subscribe.notification-event-log-size")
-
   val UseActorStatsAnalyzer = getBoolean("atmos.analytics.use-actor-stats-analyzer")
   val UseDispatcherTimeSeriesAnalyzer = getBoolean("atmos.analytics.use-dispatcher-time-series-analyzer")
   val UseErrorStatsAnalyzer = getBoolean("atmos.analytics.use-error-stats-analyzer")
@@ -62,11 +60,22 @@ class StandardAnalyzeExtension(system: ExtendedActorSystem) extends Extension {
   val UseSpanTimeSeriesAnalyzer = getBoolean("atmos.analytics.use-span-time-series-analyzer")
   val UseSummarySpanStatsAnalyzer = getBoolean("atmos.analytics.use-summary-span-stats-analyzer")
   val UseSystemMetricsTimeSeriesAnalyzer = getBoolean("atmos.analytics.use-system-metrics-time-series-analyzer")
+
+  // ** REST RELATED **
+
+  final val HtmlFileResources = config.getString("atmos.analytics.html-file-resources")
+  final val JsonPrettyPrint = config.getBoolean("atmos.analytics.json-pretty-print")
+  final val MaxTimeriesPoints = config.getInt("atmos.analytics.max-timeseries-points")
+  final val MaxSpanTimeriesPoints = config.getInt("atmos.analytics.max-span-timeseries-points")
+  final val PagingSize = config.getInt("atmos.analytics.paging-size")
+  final val DefaultLimit = config.getInt("atmos.analytics.default-limit")
+  final val IncludeAnonymousActorPathsInMetadata = config.getBoolean("atmos.analytics.include-anonymous-paths-in-metadata")
+  final val IncludeTempActorPathsInMetadata = config.getBoolean("atmos.analytics.include-temp-paths-in-metadata")
 }
 
-object AnalyzeExtension extends ExtensionId[StandardAnalyzeExtension] with ExtensionIdProvider {
+object AnalyticsExtension extends ExtensionId[StandardAnalyticsExtension] with ExtensionIdProvider {
 
-  def lookup() = AnalyzeExtension
+  def lookup() = AnalyticsExtension
 
-  def createExtension(system: ExtendedActorSystem) = new StandardAnalyzeExtension(system)
+  def createExtension(system: ExtendedActorSystem) = new StandardAnalyticsExtension(system)
 }

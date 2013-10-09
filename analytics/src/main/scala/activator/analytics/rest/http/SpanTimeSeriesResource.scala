@@ -5,13 +5,13 @@ package activator.analytics.rest.http
 
 import akka.actor.ActorSystem
 import activator.analytics.data._
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository.SpanTimeSeriesRepository
 import GatewayActor._
 import java.io.StringWriter
 import java.io.Writer
 import SpanTimeSeriesResource.QueryBuilder
 import spray.http.{ StatusCodes, HttpResponse, HttpRequest }
+import activator.analytics.AnalyticsExtension
 
 class SpanTimeSeriesResource(repository: SpanTimeSeriesRepository) extends RestResourceActor with TimeSeriesSampling[SpanTimeSeriesPoint] {
 
@@ -20,7 +20,7 @@ class SpanTimeSeriesResource(repository: SpanTimeSeriesRepository) extends RestR
   def jsonRepresentation(request: HttpRequest) =
     new SpanTimeSeriesJsonRepresentation(formatTimestamps(request), context.system)
 
-  override val configMaxPoints = RestExtension(context.system).MaxSpanTimeriesPoints
+  override val configMaxPoints = AnalyticsExtension(context.system).MaxSpanTimeriesPoints
 
   def handle(req: HttpRequest): HttpResponse = {
     queryBuilder.build(req.uri.path.toString, req.uri.query.toString) match {
@@ -86,7 +86,7 @@ class SpanTimeSeriesJsonRepresentation(override val formatTimestamps: Boolean, s
   }
 
   def writeJson(spanTimeSeries: SpanTimeSeries, writer: Writer) {
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     gen.writeStartObject()
 
     writeJson(spanTimeSeries.timeRange, gen)

@@ -5,7 +5,6 @@ package activator.analytics.rest.http
 
 import akka.actor.{ ActorSystem, Actor }
 import activator.analytics.data.{ Counts, TimeRange, ErrorStats }
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository.ErrorStatsRepository
 import GatewayActor._
 import java.io.StringWriter
@@ -13,7 +12,7 @@ import org.codehaus.jackson.JsonGenerator
 import spray.http._
 import TraceEventResource.{ EventUri, TraceTreeUri }
 import spray.http.HttpResponse
-import activator.analytics.analyzer.{ AnalyzeExtension, StandardAnalyzeExtension }
+import activator.analytics.{ StandardAnalyticsExtension, AnalyticsExtension }
 
 class ErrorStatsResource(repository: ErrorStatsRepository) extends Actor {
   import ErrorStatsResource._
@@ -36,7 +35,7 @@ class ErrorStatsResource(repository: ErrorStatsRepository) extends Actor {
       case Right(q) ⇒
         val stats = repository.findWithinTimePeriod(q.timeRange, q.node, q.actorSystem)
         val headers = HeadersBuilder.headers(q.timeRange.endTime, MediaTypes.`application/json`)
-        val settings = AnalyzeExtension(context.system)
+        val settings = AnalyticsExtension(context.system)
         val representation = q.chunks match {
           case None ⇒
             val result = filterByTime(q.fromTimestamp, ErrorStats.concatenate(stats, q.timeRange, q.node, q.actorSystem))
@@ -75,7 +74,7 @@ class ErrorStatsResource(repository: ErrorStatsRepository) extends Actor {
     recounted.getOrElse(stats)
   }
 
-  private def trimDeviationDetails(result: ErrorStats, limit: Option[Int], settings: StandardAnalyzeExtension): ErrorStats = {
+  private def trimDeviationDetails(result: ErrorStats, limit: Option[Int], settings: StandardAnalyticsExtension): ErrorStats = {
     result.copy(
       metrics = result.metrics.copy(
         deviations =
@@ -134,7 +133,7 @@ class ErrorStatsJsonRepresentation(
 
   def toJson(errorStats: ErrorStats, dataFrom: Option[Long] = None): String = {
     val writer = new StringWriter
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     writeJson(errorStats, dataFrom, gen)
     gen.flush()
     writer.toString
@@ -142,7 +141,7 @@ class ErrorStatsJsonRepresentation(
 
   def toJson(stats: Iterable[ErrorStats]): String = {
     val writer = new StringWriter
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     gen.writeStartArray()
     for (s ← stats) writeJson(s, None, gen)
     gen.writeEndArray()

@@ -5,13 +5,13 @@ package activator.analytics.rest.http
 
 import akka.actor.ActorSystem
 import activator.analytics.data.{ TimeRange, MailboxTimeSeriesPoint, MailboxTimeSeries }
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository.MailboxTimeSeriesRepository
 import GatewayActor._
 import java.io.StringWriter
 import java.io.Writer
 import org.codehaus.jackson.JsonGenerator
 import spray.http.{ StatusCodes, HttpResponse, HttpRequest }
+import activator.analytics.AnalyticsExtension
 
 class MailboxTimeSeriesResource(repository: MailboxTimeSeriesRepository)
   extends RestResourceActor with TimeSeriesSampling[MailboxTimeSeriesPoint] {
@@ -21,7 +21,7 @@ class MailboxTimeSeriesResource(repository: MailboxTimeSeriesRepository)
   def jsonRepresentation(request: HttpRequest) =
     new MailboxTimeSeriesJsonRepresentation(formatTimestamps(request), context.system)
 
-  override val configMaxPoints = RestExtension(context.system).MaxTimeriesPoints
+  override val configMaxPoints = AnalyticsExtension(context.system).MaxTimeriesPoints
 
   def handle(req: HttpRequest): HttpResponse = {
     queryBuilder.build(req.uri.path.toString, req.uri.query.toString) match {
@@ -91,7 +91,7 @@ class MailboxTimeSeriesJsonRepresentation(override val formatTimestamps: Boolean
   }
 
   def writeJson(timeSeries: MailboxTimeSeries, writer: Writer) {
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     gen.writeStartObject()
 
     writeJson(timeSeries.timeRange, gen)

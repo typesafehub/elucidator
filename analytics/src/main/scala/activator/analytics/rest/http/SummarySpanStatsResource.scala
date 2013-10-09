@@ -5,7 +5,6 @@ package activator.analytics.rest.http
 
 import akka.actor.ActorSystem
 import activator.analytics.data._
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository.SummarySpanStatsRepository
 import GatewayActor._
 import java.io.StringWriter
@@ -15,6 +14,7 @@ import spray.http.{ StatusCodes, HttpRequest }
 import scala.Left
 import scala.Right
 import spray.http.HttpResponse
+import activator.analytics.AnalyticsExtension
 
 class SummarySpanStatsResource(repository: SummarySpanStatsRepository) extends RestResourceActor {
   import SummarySpanStatsResource._
@@ -76,7 +76,7 @@ class SummarySpanStatsJsonRepresentation(override val formatTimestamps: Boolean,
 
   def toJson(stats: SummarySpanStats): String = {
     val writer = new StringWriter
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     writeJson(stats, gen)
     gen.flush()
     writer.toString
@@ -84,7 +84,7 @@ class SummarySpanStatsJsonRepresentation(override val formatTimestamps: Boolean,
 
   def toJson(stats: Iterable[SummarySpanStats]): String = {
     val writer = new StringWriter
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     gen.writeStartArray()
     for (s ← stats) writeJson(s, gen)
     gen.writeEndArray()

@@ -15,10 +15,11 @@ import com.typesafe.atmos.trace.TraceEvents
 import java.lang.System.currentTimeMillis
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.duration._
+import activator.analytics.AnalyticsExtension
 
 class Analyzer(boot: AnalyzerBoot) extends Actor with ActorLogging {
 
-  val settings = AnalyzeExtension(context.system)
+  val settings = AnalyticsExtension(context.system)
   implicit val system = context.system
 
   // Can't use AllForOneStrategy because it will cause all children to stop when AckAggregator is stopped
@@ -29,7 +30,7 @@ class Analyzer(boot: AnalyzerBoot) extends Actor with ActorLogging {
     case _                               ⇒ Escalate
   }
 
-  val extension = AnalyzeExtension(context.system)
+  val extension = AnalyticsExtension(context.system)
   val alertDispatcher = None
 
   lazy val playAnalyzerConfig: Option[PlayAnalyzerConfiguration] =

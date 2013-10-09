@@ -6,7 +6,6 @@ package activator.analytics.rest.http
 import akka.actor.ActorSystem
 import activator.analytics.data._
 import activator.analytics.data.{ TimeRange, SpanType, Scope, PercentilesSpanStats }
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository.PercentilesSpanStatsRepository
 import GatewayActor._
 import java.io.StringWriter
@@ -15,6 +14,7 @@ import PercentilesSpanStatsResource.QueryBuilder
 import PercentilesSpanStatsResource.QueryBuilder._
 import spray.http.{ StatusCodes, HttpResponse, HttpRequest }
 import TimeRangeType.Hours
+import activator.analytics.AnalyticsExtension
 
 class PercentilesSpanStatsResource(repository: PercentilesSpanStatsRepository) extends RestResourceActor {
 
@@ -90,7 +90,7 @@ class PercentilesSpanStatsJsonRepresentation(override val formatTimestamps: Bool
   }
 
   def writeJson(percentilesSpanStats: PercentilesSpanStats, writer: Writer) {
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     gen.writeStartObject()
 
     writeJson(percentilesSpanStats.timeRange, gen)

@@ -6,7 +6,6 @@ package activator.analytics.rest.http
 import akka.actor.{ ActorSystem, ActorPath, RootActorPath }
 import activator.analytics.data._
 import activator.analytics.rest.http.MetadataStatsResource._
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository._
 import java.io.StringWriter
 import java.util.TreeMap
@@ -15,6 +14,7 @@ import scala.annotation.tailrec
 import scala.concurrent._
 import scala.concurrent.duration._
 import spray.http.{ StatusCodes, HttpResponse, HttpRequest }
+import activator.analytics.AnalyticsExtension
 
 class MetadataStatsResource(
   metadataStatsRepository: MetadataStatsRepository,
@@ -22,12 +22,12 @@ class MetadataStatsResource(
   errorStatsRepository: ErrorStatsRepository,
   actorStatsRepository: ActorStatsRepository) extends RestResourceActor {
 
-  final val queryBuilder = new QueryBuilder(RestExtension(context.system).DefaultLimit)
+  final val queryBuilder = new QueryBuilder(AnalyticsExtension(context.system).DefaultLimit)
   final val jsonRepresentation = new MetadataJsonRepresentation(context.system)
   final val retriever = new MetadataStatsRetriever(context.system, metadataStatsRepository, summarySpanStatsRepository, errorStatsRepository, actorStatsRepository)
 
   def handle(req: HttpRequest): HttpResponse = {
-    val restExtension = RestExtension(context.system)
+    val analyticsExtension = AnalyticsExtension(context.system)
 
     queryBuilder.build(req.uri.query.toString) match {
       case Right(query) ⇒
@@ -38,40 +38,40 @@ class MetadataStatsResource(
           val metadata = retriever.retrieveActorPathTreeMetadata(
             query.timeRange,
             query.scope,
-            restExtension.IncludeAnonymousActorPathsInMetadata,
-            restExtension.IncludeTempActorPathsInMetadata,
+            analyticsExtension.IncludeAnonymousActorPathsInMetadata,
+            analyticsExtension.IncludeTempActorPathsInMetadata,
             query.limit)
           HttpResponse(entity = jsonRepresentation.toJson(metadata), headers = headers).asJson
         } else if (path.endsWith(DispatchersName)) {
           val metadata = retriever.retrieveDispatchersMetadata(
             query.timeRange,
             query.scope,
-            restExtension.IncludeAnonymousActorPathsInMetadata,
-            restExtension.IncludeTempActorPathsInMetadata,
+            analyticsExtension.IncludeAnonymousActorPathsInMetadata,
+            analyticsExtension.IncludeTempActorPathsInMetadata,
             query.limit)
           HttpResponse(entity = jsonRepresentation.toJson(metadata), headers = headers).asJson
         } else if (path.endsWith(NodesName)) {
           val metadata = retriever.retrieveNodesMetadata(
             query.timeRange,
             query.scope,
-            restExtension.IncludeAnonymousActorPathsInMetadata,
-            restExtension.IncludeTempActorPathsInMetadata,
+            analyticsExtension.IncludeAnonymousActorPathsInMetadata,
+            analyticsExtension.IncludeTempActorPathsInMetadata,
             query.limit)
           HttpResponse(entity = jsonRepresentation.toJson(metadata), headers = headers).asJson
         } else if (path.endsWith(ActorSystemName)) {
           val metadata = retriever.retrieveActorSystemsMetadata(
             query.timeRange,
             query.scope,
-            restExtension.IncludeAnonymousActorPathsInMetadata,
-            restExtension.IncludeTempActorPathsInMetadata,
+            analyticsExtension.IncludeAnonymousActorPathsInMetadata,
+            analyticsExtension.IncludeTempActorPathsInMetadata,
             query.limit)
           HttpResponse(entity = jsonRepresentation.toJson(metadata), headers = headers)
         } else if (path.endsWith(SpanTypesName)) {
           val metadata = retriever.retrieveMetadata(
             query.timeRange,
             query.scope,
-            restExtension.IncludeAnonymousActorPathsInMetadata,
-            restExtension.IncludeTempActorPathsInMetadata,
+            analyticsExtension.IncludeAnonymousActorPathsInMetadata,
+            analyticsExtension.IncludeTempActorPathsInMetadata,
             query.limit)
           val formattedSpanTypes: Set[String] = metadata.metrics.spanTypes.map(SpanType.formatSpanTypeName(_))
           HttpResponse(entity = jsonRepresentation.toJson(SpanTypesName, formattedSpanTypes), headers = headers).asJson
@@ -79,24 +79,24 @@ class MetadataStatsResource(
           val metadata = retriever.retrieveMetadata(
             query.timeRange,
             query.scope,
-            restExtension.IncludeAnonymousActorPathsInMetadata,
-            restExtension.IncludeTempActorPathsInMetadata,
+            analyticsExtension.IncludeAnonymousActorPathsInMetadata,
+            analyticsExtension.IncludeTempActorPathsInMetadata,
             query.limit)
           HttpResponse(entity = jsonRepresentation.toJson(TagsName, metadata.metrics.tags), headers = headers).asJson
         } else if (path.endsWith(PlayPatternsName)) {
           val metadata = retriever.retrieveMetadata(
             query.timeRange,
             query.scope,
-            restExtension.IncludeAnonymousActorPathsInMetadata,
-            restExtension.IncludeTempActorPathsInMetadata,
+            analyticsExtension.IncludeAnonymousActorPathsInMetadata,
+            analyticsExtension.IncludeTempActorPathsInMetadata,
             query.limit)
           HttpResponse(entity = jsonRepresentation.toJson(PlayPatternsName, metadata.metrics.playPatterns), headers = headers).asJson
         } else if (path.endsWith(PlayControllersName)) {
           val metadata = retriever.retrieveMetadata(
             query.timeRange,
             query.scope,
-            restExtension.IncludeAnonymousActorPathsInMetadata,
-            restExtension.IncludeTempActorPathsInMetadata,
+            analyticsExtension.IncludeAnonymousActorPathsInMetadata,
+            analyticsExtension.IncludeTempActorPathsInMetadata,
             query.limit)
           HttpResponse(entity = jsonRepresentation.toJson(PlayControllersName, metadata.metrics.playControllers), headers = headers).asJson
         } else {
@@ -104,8 +104,8 @@ class MetadataStatsResource(
           val metadata = retriever.retrieveFullMetadata(
             query.timeRange,
             query.scope,
-            restExtension.IncludeAnonymousActorPathsInMetadata,
-            restExtension.IncludeTempActorPathsInMetadata,
+            analyticsExtension.IncludeAnonymousActorPathsInMetadata,
+            analyticsExtension.IncludeTempActorPathsInMetadata,
             query.limit)
           HttpResponse(entity = jsonRepresentation.toJson(metadata), headers = headers).asJson
         }
@@ -461,7 +461,7 @@ class MetadataJsonRepresentation(system: ActorSystem) extends JsonRepresentation
 
   def toJson(metadata: MetadataStats): String = {
     val writer = new StringWriter
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     writeJson(metadata, gen)
     gen.flush()
     writer.toString
@@ -493,7 +493,7 @@ class MetadataJsonRepresentation(system: ActorSystem) extends JsonRepresentation
 
   def toJson(metadata: Metadata): String = {
     val writer = new StringWriter
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     writeJson(metadata, gen)
     gen.flush()
     writer.toString
@@ -597,7 +597,7 @@ class MetadataJsonRepresentation(system: ActorSystem) extends JsonRepresentation
 
   def toJson(name: String, values: Set[String]): String = {
     val writer = new StringWriter
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     gen.writeStartObject()
 
     writeSet(name, values, gen)

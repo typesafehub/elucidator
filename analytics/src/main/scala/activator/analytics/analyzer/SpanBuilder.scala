@@ -11,12 +11,13 @@ import com.typesafe.atmos.util.Uuid
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.duration._
+import activator.analytics.AnalyticsExtension
 
 object SpanBuilder {
 
   val MaxEventsInTrace = 1000
 
-  def isIgnored(spanType: SpanType)(implicit system: ActorSystem): Boolean = AnalyzeExtension(system).IgnoreSpanTypes.toSet.contains(spanType.formattedName)
+  def isIgnored(spanType: SpanType)(implicit system: ActorSystem): Boolean = AnalyticsExtension(system).IgnoreSpanTypes.toSet.contains(spanType.formattedName)
 
   def apply(spanType: SpanType, traceRepository: TraceRetrievalRepository)(implicit system: ActorSystem): SpanBuilder = spanType match {
     // The Span between ActorSend and ActorCompleted with different 'local' ids
@@ -118,14 +119,14 @@ object SpanBuilder {
 
   def isMarkerEnded(event: TraceEvent)(implicit system: ActorSystem) = {
     event.annotation match {
-      case MarkerEnded(name) if !AnalyzeExtension(system).IgnoreSpanTypes.exists(_ == name) ⇒ true
+      case MarkerEnded(name) if !AnalyticsExtension(system).IgnoreSpanTypes.exists(_ == name) ⇒ true
       case _ ⇒ false
     }
   }
 
   def isMarkerStarted(lookAhead: IndexedSeq[TraceEvent], event: TraceEvent, backTrace: IndexedSeq[TraceEvent])(implicit system: ActorSystem) = {
     (event.annotation, backTrace.head.annotation) match {
-      case (MarkerStarted(name1), MarkerEnded(name2)) if name1 == name2 && !(AnalyzeExtension(system).IgnoreSpanTypes.exists(_ == name1)) ⇒ true
+      case (MarkerStarted(name1), MarkerEnded(name2)) if name1 == name2 && !(AnalyticsExtension(system).IgnoreSpanTypes.exists(_ == name1)) ⇒ true
       case _ ⇒ false
     }
   }
@@ -170,7 +171,7 @@ class SpanBuilder(
       // durations must not be less than 0, can happen when clock is wrong or changed
       def ensurePositive(value: Long): Long = if (value < 0L) 0L else value
 
-      if (AnalyzeExtension(system).UseNanoTimeCrossNodes || start.node == end.node) {
+      if (AnalyticsExtension(system).UseNanoTimeCrossNodes || start.node == end.node) {
         ensurePositive(end.nanoTime - start.nanoTime).nanos
       } else {
         ensurePositive(end.timestamp - start.timestamp).millis

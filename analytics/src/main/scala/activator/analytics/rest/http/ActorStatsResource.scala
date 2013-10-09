@@ -8,13 +8,12 @@ import akka.actor.ActorSystem
 import activator.analytics.data._
 import activator.analytics.data.MessageRateMetrics
 import activator.analytics.data.PeakMessageRateMetrics
-import activator.analytics.rest.RestExtension
 import activator.analytics.repository.ActorStatsRepository
 import java.io.StringWriter
 import org.codehaus.jackson.JsonGenerator
 import spray.http.{ StatusCodes, HttpRequest, HttpResponse }
 import TraceEventResource.{ EventUri, TraceTreeUri }
-import activator.analytics.analyzer.{ AnalyzeExtension, StandardAnalyzeExtension }
+import activator.analytics.{ StandardAnalyticsExtension, AnalyticsExtension }
 
 class ActorStatsResource(repository: ActorStatsRepository) extends RestResourceActor {
   import GatewayActor._
@@ -29,7 +28,7 @@ class ActorStatsResource(repository: ActorStatsRepository) extends RestResourceA
     queryBuilder.build(req.uri.path.toString, req.uri.query.toString) match {
       case Right(query) ⇒
         val stats = repository.findWithinTimePeriod(query.timeRange, query.scope)
-        val settings = AnalyzeExtension(context.system)
+        val settings = AnalyticsExtension(context.system)
         val representation = query.chunks match {
           case None ⇒
             val result = ActorStats.concatenate(stats, query.timeRange, query.scope)
@@ -47,7 +46,7 @@ class ActorStatsResource(repository: ActorStatsRepository) extends RestResourceA
     }
   }
 
-  def trimDeviationDetails(result: ActorStats, settings: StandardAnalyzeExtension): ActorStats = {
+  def trimDeviationDetails(result: ActorStats, settings: StandardAnalyticsExtension): ActorStats = {
     result.copy(
       metrics = result.metrics.copy(
         deviationDetails =
@@ -92,7 +91,7 @@ class ActorStatsJsonRepresentation(
 
   def toJson(stats: ActorStats): String = {
     val writer = new StringWriter
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     writeJson(stats, gen)
     gen.flush()
     writer.toString
@@ -100,7 +99,7 @@ class ActorStatsJsonRepresentation(
 
   def toJson(stats: Iterable[ActorStats]): String = {
     val writer = new StringWriter
-    val gen = createJsonGenerator(writer, RestExtension(system).JsonPrettyPrint)
+    val gen = createJsonGenerator(writer, AnalyticsExtension(system).JsonPrettyPrint)
     gen.writeStartArray()
     for (s ← stats) writeJson(s, gen)
     gen.writeEndArray()
