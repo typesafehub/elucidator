@@ -12,5 +12,5 @@ object Dependencies {
     "junit"                   % "junit"               % "4.5",
     "ch.qos.logback"          % "logback-classic"     % "1.0.13",
     "com.typesafe.atmos" 		  % "atmos-collect" 		  % "1.4.0-SNAPSHOT"    % "test",
-    "org.scalatest"           %% "scalatest"          % "1.9.1"             % "test")
+    "org.scalatest"           %% "scalatest"          % "1.9.1")
 }

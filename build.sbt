@@ -28,6 +28,7 @@ lazy val analytics =
 		project.in( file("analytics") )
 	.settings(formatSettings:_*)
 	.settings(libraryDependencies ++= Dependencies.analyticsDependencies)
+    .settings(ProguardConf.analyticsSettings:_*)
 
 // *** RUNNER ***
 
