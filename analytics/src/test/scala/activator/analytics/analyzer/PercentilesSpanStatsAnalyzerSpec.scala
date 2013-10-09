@@ -8,13 +8,13 @@ import activator.analytics.data.{ TimeRange, Spans, Span, Scope }
 import activator.analytics.repository.MemoryPercentilesSpanStatsRepository
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.trace.store.MemoryTraceRepository
-import com.typesafe.atmos.util.AtmosSpec
 import com.typesafe.atmos.util.Uuid
 import java.util.concurrent.CountDownLatch
 import scala.concurrent.duration._
+import activator.analytics.AnalyticsSpec
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class PercentilesSpanStatsAnalyzerSpec extends AtmosSpec with AnalyzeTest {
+class PercentilesSpanStatsAnalyzerSpec extends AnalyticsSpec with AnalyzeTest {
 
   val traceRepository = new MemoryTraceRepository
   var statsRepository: MemoryPercentilesSpanStatsRepository = _

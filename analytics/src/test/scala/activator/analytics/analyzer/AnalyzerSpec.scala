@@ -7,14 +7,14 @@ import akka.actor._
 import activator.analytics.data._
 import com.typesafe.atmos.subscribe.{ Notification, Notifications }
 import com.typesafe.atmos.trace._
-import com.typesafe.atmos.util.AtmosSpec
 import com.typesafe.atmos.util.Uuid
 import com.typesafe.atmos.uuid.UUID
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.CountDownLatch
+import activator.analytics.AnalyticsSpec
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class AnalyzerSpec extends AtmosSpec(AnalyzerSpec.testConfig) with AnalyzeTest {
+class AnalyzerSpec extends AnalyticsSpec(AnalyzerSpec.testConfig) with AnalyzeTest {
   import AnalyzerSpec._
 
   val count = new AtomicInteger(0)

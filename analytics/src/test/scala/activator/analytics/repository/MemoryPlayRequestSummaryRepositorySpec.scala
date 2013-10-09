@@ -7,12 +7,12 @@ import activator.analytics.data._
 import activator.analytics.common.PlayRequestSummaryGenerator
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.util._
-import com.typesafe.atmos.util.AtmosSpec
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.MustMatchers
+import activator.analytics.AnalyticsSpec
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class MemoryPlayRequestSummaryRepositorySpec extends AtmosSpec with MustMatchers with BeforeAndAfterEach {
+class MemoryPlayRequestSummaryRepositorySpec extends AnalyticsSpec with MustMatchers with BeforeAndAfterEach {
   val one = PlayRequestSummaryGenerator.generate
   val two = PlayRequestSummaryGenerator.generate
 

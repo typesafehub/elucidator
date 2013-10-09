@@ -7,13 +7,13 @@ import activator.analytics.data._
 import activator.analytics.common.TraceExample
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.util._
-import com.typesafe.atmos.util.AtmosSpec
 import com.typesafe.atmos.uuid.UUID
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.MustMatchers
+import activator.analytics.AnalyticsSpec
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class MemoryPlayTraceTreeRepositorySpec extends AtmosSpec with MustMatchers with BeforeAndAfterEach {
+class MemoryPlayTraceTreeRepositorySpec extends AnalyticsSpec with MustMatchers with BeforeAndAfterEach {
 
   case class TaggedTrace(traceId: UUID, traces: Seq[Seq[TraceEvent]])
 

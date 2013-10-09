@@ -10,7 +10,6 @@ object Dependencies {
     "ch.qos.logback"       % "logback-classic"    % "1.0.13",
 
     "com.typesafe.akka"    %% "akka-testkit"      % "2.1.4"          % "test",
-    "com.typesafe.atmos"   % "atmos-collect"      % "1.4.0-SNAPSHOT" % "test" artifacts(Artifact("atmos-collect-test", "jar", "jar")),
     "junit"                % "junit"              % "4.5"            % "test",
     "org.scalatest"        %% "scalatest"         % "1.9.1"          % "test")
 }

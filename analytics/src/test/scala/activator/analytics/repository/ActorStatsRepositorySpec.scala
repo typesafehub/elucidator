@@ -3,12 +3,12 @@
  */
 package activator.analytics.repository
 
-import com.typesafe.atmos.util.AtmosSpec
 import org.scalatest.matchers.MustMatchers
 import activator.analytics.data.{ ActorStatsSorts, Scope, TimeRange, ActorStats }
+import activator.analytics.AnalyticsSpec
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class ActorStatsRepositorySpec extends AtmosSpec with MustMatchers {
+class ActorStatsRepositorySpec extends AnalyticsSpec with MustMatchers {
   val repo = new MemoryActorStatsRepository
 
   "ActorStatsRepo must" must {

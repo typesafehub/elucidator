@@ -5,12 +5,12 @@ package activator.analytics.repository
 
 import activator.analytics.data.TimeRange._
 import activator.analytics.data.{ MetadataStatsMetrics, TimeRange, Scope, MetadataStats }
-import com.typesafe.atmos.util.AtmosSpec
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.MustMatchers
+import activator.analytics.AnalyticsSpec
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class MemoryMetadataStatsRepositorySpec extends AtmosSpec with MustMatchers with BeforeAndAfterEach {
+class MemoryMetadataStatsRepositorySpec extends AnalyticsSpec with MustMatchers with BeforeAndAfterEach {
   var repository: MemoryMetadataStatsRepository = _
 
   val time = System.currentTimeMillis

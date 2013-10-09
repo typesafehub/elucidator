@@ -3,12 +3,13 @@
  */
 package activator.analytics.analyzer
 
-import akka.actor.{ Actor, Props, ActorRef, PoisonPill, ActorLogging }
+import akka.actor.{ Props, ActorRef, PoisonPill }
 import com.typesafe.atmos.trace.{ TraceEvents, TraceEvent }
 import activator.analytics.common.TraceExample
-import com.typesafe.atmos.util.AtmosSpec
 import scala.concurrent.{ Promise, Future, Await }
 import scala.concurrent.duration._
+import activator.analytics.AnalyticsSpec
+import activator.analytics.TimeoutHandler
 
 object TraceAccumulatorSpec {
   val uuid = TraceExample.traceId
@@ -17,7 +18,7 @@ object TraceAccumulatorSpec {
 }
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class TraceAccumulatorSpec extends AtmosSpec with AnalyzeTest {
+class TraceAccumulatorSpec extends AnalyticsSpec with AnalyzeTest {
   import TraceAccumulatorSpec._
 
   def withAccumulator(test: Seq[TraceEvent] ⇒ Boolean, flushAge: Long, within: Int = 5 * 1000, repoRetentionAge: Long = 60 * 1000L)(body: (ActorRef, Future[Boolean]) ⇒ Unit): Unit = {

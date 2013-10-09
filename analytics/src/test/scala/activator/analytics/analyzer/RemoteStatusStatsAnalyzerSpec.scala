@@ -10,11 +10,11 @@ import com.typesafe.atmos.trace.RemoteStatus
 import com.typesafe.atmos.trace.RemoteStatusType.RemoteClientWriteFailedType
 import com.typesafe.atmos.trace.store.MemoryTraceRepository
 import com.typesafe.atmos.trace.TraceEvents
-import com.typesafe.atmos.util.AtmosSpec
 import java.util.concurrent.CountDownLatch
+import activator.analytics.AnalyticsSpec
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class RemoteStatusStatsAnalyzerSpec extends AtmosSpec with AnalyzeTest {
+class RemoteStatusStatsAnalyzerSpec extends AnalyticsSpec with AnalyzeTest {
   val traceRepository = new MemoryTraceRepository
   var statsRepository: MemoryRemoteStatusStatsRepository = _
   var analyzer: ActorRef = _

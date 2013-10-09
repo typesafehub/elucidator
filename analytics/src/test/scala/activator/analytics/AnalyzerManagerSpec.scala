@@ -4,14 +4,13 @@
 package activator.analytics
 
 import com.typesafe.atmos.trace.ReceiveMain
-import com.typesafe.atmos.util.AtmosSpec
 import org.scalatest.matchers.MustMatchers
 import scala.concurrent._
 import scala.concurrent.duration._
 import activator.analytics.analyzer.AnalyzerManager
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class AnalyzerManagerSpec extends AtmosSpec with MustMatchers {
+class AnalyzerManagerSpec extends AnalyticsSpec with MustMatchers {
 
   override def atStartup(): Unit = {
     ReceiveMain.startReceiver(system.settings.config)

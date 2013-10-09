@@ -13,11 +13,11 @@ import com.typesafe.atmos.trace.SysMsgCompleted
 import com.typesafe.atmos.trace.SystemMetrics
 import com.typesafe.atmos.trace.TerminateSysMsg
 import com.typesafe.atmos.trace.TraceEvents
-import com.typesafe.atmos.util.AtmosSpec
 import java.util.concurrent.CountDownLatch
+import activator.analytics.AnalyticsSpec
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class SystemMetricsTimeSeriesAnalyzerSpec extends AtmosSpec with AnalyzeTest {
+class SystemMetricsTimeSeriesAnalyzerSpec extends AnalyticsSpec with AnalyzeTest {
 
   val traceRepository = new MemoryTraceRepository
   var timeSeriesRepository: MemorySystemMetricsTimeSeriesRepository = _

@@ -9,13 +9,13 @@ import activator.analytics.repository.MemoryHistogramSpanStatsRepository
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.trace.Batch
 import com.typesafe.atmos.trace.store.MemoryTraceRepository
-import com.typesafe.atmos.util.AtmosSpec
 import com.typesafe.atmos.util.Uuid
 import java.util.concurrent.CountDownLatch
 import scala.concurrent.duration._
+import activator.analytics.AnalyticsSpec
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class HistogramSpanStatsAnalyzerSpec extends AtmosSpec with AnalyzeTest {
+class HistogramSpanStatsAnalyzerSpec extends AnalyticsSpec with AnalyzeTest {
 
   val traceRepository = new MemoryTraceRepository
   var statsRepository: MemoryHistogramSpanStatsRepository = _

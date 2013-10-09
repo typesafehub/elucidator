@@ -6,10 +6,10 @@ package activator.analytics.analyzer
 import akka.actor.{ Props, ActorRef, PoisonPill }
 import com.typesafe.atmos.trace.{ TraceEvents, TraceEvent }
 import activator.analytics.common.TraceExample
-import com.typesafe.atmos.util.AtmosSpec
 import com.typesafe.atmos.uuid.UUID
 import scala.concurrent._
 import scala.concurrent.duration._
+import activator.analytics.AnalyticsSpec
 
 object PlayEventFilterSpec {
   val uuid = TraceExample.traceId
@@ -21,7 +21,7 @@ object PlayEventFilterSpec {
 }
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class PlayEventFilterSpec extends AtmosSpec with AnalyzeTest {
+class PlayEventFilterSpec extends AnalyticsSpec with AnalyzeTest {
   import PlayEventFilterSpec._
 
   def withFilter(test: Seq[TraceEvent] ⇒ Boolean, flushAge: Long, within: Int = 5 * 1000, repoRetentionAge: Long = 60 * 1000L)(body: (ActorRef, Future[Boolean]) ⇒ Unit): Unit = {

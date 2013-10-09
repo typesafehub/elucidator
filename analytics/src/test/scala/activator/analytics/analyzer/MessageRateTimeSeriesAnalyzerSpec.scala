@@ -10,12 +10,12 @@ import com.typesafe.atmos.trace.ActorInfo
 import com.typesafe.atmos.trace.ActorReceived
 import com.typesafe.atmos.trace.store.MemoryTraceRepository
 import com.typesafe.atmos.trace.TraceEvents
-import com.typesafe.atmos.util.AtmosSpec
 import java.util.concurrent.CountDownLatch
 import scala.concurrent.duration._
+import activator.analytics.AnalyticsSpec
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class MessageRateTimeSeriesAnalyzerSpec extends AtmosSpec with AnalyzeTest {
+class MessageRateTimeSeriesAnalyzerSpec extends AnalyticsSpec with AnalyzeTest {
 
   val traceRepository = new MemoryTraceRepository
   var statsRepository: MemoryMessageRateTimeSeriesRepository = _

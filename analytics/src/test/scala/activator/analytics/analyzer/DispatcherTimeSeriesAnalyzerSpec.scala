@@ -8,11 +8,11 @@ import activator.analytics.data.TimeRange
 import activator.analytics.repository.MemoryDispatcherTimeSeriesRepository
 import com.typesafe.atmos.trace.store.MemoryTraceRepository
 import com.typesafe.atmos.trace.{ TraceEvents, TraceEvent, DispatcherStatus, DispatcherMetrics }
-import com.typesafe.atmos.util.AtmosSpec
 import java.util.concurrent.CountDownLatch
+import activator.analytics.AnalyticsSpec
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class DispatcherTimeSeriesAnalyzerSpec extends AtmosSpec with AnalyzeTest {
+class DispatcherTimeSeriesAnalyzerSpec extends AnalyticsSpec with AnalyzeTest {
   val traceRepository = new MemoryTraceRepository
   var statsRepository: MemoryDispatcherTimeSeriesRepository = _
   var analyzer: ActorRef = _

@@ -11,8 +11,8 @@ import com.typesafe.atmos.trace.TraceEvent
 import java.net.{ InetAddress, UnknownHostException }
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.WordSpec
-import com.typesafe.atmos.util.TimeoutHandler
 import scala.concurrent.Await
+import activator.analytics.TimeoutHandler
 import scala.concurrent.duration._
 
 trait AnalyzeTest extends BeforeAndAfterEach { this: WordSpec ⇒

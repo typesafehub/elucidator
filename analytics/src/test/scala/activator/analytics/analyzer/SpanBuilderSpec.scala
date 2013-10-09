@@ -6,13 +6,14 @@ package activator.analytics.analyzer
 import activator.analytics.data._
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.trace.store.MemoryTraceEventListener
-import com.typesafe.atmos.util.{ AtmosSpec, Uuid }
+import com.typesafe.atmos.util.Uuid
 import com.typesafe.atmos.uuid.UUID
 import scala.annotation.tailrec
 import scala.concurrent.duration._
+import activator.analytics.AnalyticsSpec
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class SpanBuilderSpec extends AtmosSpec with AnalyzeTest {
+class SpanBuilderSpec extends AnalyticsSpec with AnalyzeTest {
 
   val traceReceiver = TraceReceiver(config)
   val traceRepository = MemoryTraceEventListener.getRepositoryFor(traceReceiver).getOrElse(

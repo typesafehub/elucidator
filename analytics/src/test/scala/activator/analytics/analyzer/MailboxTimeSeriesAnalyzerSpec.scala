@@ -8,12 +8,12 @@ import activator.analytics.data.TimeRange
 import activator.analytics.repository.MemoryMailboxTimeSeriesRepository
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.trace.store.MemoryTraceRepository
-import com.typesafe.atmos.util.AtmosSpec
 import java.util.concurrent.CountDownLatch
 import scala.concurrent.duration._
+import activator.analytics.AnalyticsSpec
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class MailboxTimeSeriesAnalyzerSpec extends AtmosSpec with AnalyzeTest {
+class MailboxTimeSeriesAnalyzerSpec extends AnalyticsSpec with AnalyzeTest {
 
   val traceRepository = new MemoryTraceRepository
   var statsRepository: MemoryMailboxTimeSeriesRepository = _

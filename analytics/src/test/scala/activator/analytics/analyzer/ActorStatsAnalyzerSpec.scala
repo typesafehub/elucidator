@@ -9,12 +9,13 @@ import activator.analytics.metrics.RateMetric
 import activator.analytics.repository.MemoryActorStatsRepository
 import com.typesafe.atmos.trace._
 import com.typesafe.atmos.trace.store.MemoryTraceEventListener
-import com.typesafe.atmos.util.AtmosSpec
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit._
+import activator.analytics.AnalyticsSpec
+import activator.analytics.TimeoutHandler
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class ActorStatsAnalyzerSpec extends AtmosSpec(ActorStatsAnalyzerSpec.testConfig) with AnalyzeTest {
+class ActorStatsAnalyzerSpec extends AnalyticsSpec(ActorStatsAnalyzerSpec.testConfig) with AnalyzeTest {
   import ActorStatsAnalyzerSpec._
 
   val traceReceiver = TraceReceiver(config)

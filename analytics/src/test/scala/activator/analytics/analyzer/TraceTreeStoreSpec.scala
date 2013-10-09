@@ -3,14 +3,13 @@
  */
 package activator.analytics.analyzer
 
-import akka.actor.{ Actor, Props, ActorRef, PoisonPill, ActorLogging }
+import akka.actor.{ Props, ActorRef, PoisonPill }
 import com.typesafe.atmos.trace.{ TraceEvents, TraceEvent }
 import activator.analytics.common.TraceExample
-import com.typesafe.atmos.util.AtmosSpec
 import activator.analytics.repository.MemoryPlayTraceTreeRepository
-import com.typesafe.atmos.uuid.UUID
 import scala.concurrent.{ Promise, Future, Await }
 import scala.concurrent.duration._
+import activator.analytics.AnalyticsSpec
 
 object TraceTreeStoreSpec {
   val uuid = TraceExample.traceId
@@ -19,7 +18,7 @@ object TraceTreeStoreSpec {
 }
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
-class TraceTreeStoreSpec extends AtmosSpec with AnalyzeTest {
+class TraceTreeStoreSpec extends AnalyticsSpec with AnalyzeTest {
   import TraceTreeStoreSpec._
 
   def withStore(test: Seq[TraceEvent] ⇒ Boolean, flushAge: Long, within: Int = 5 * 1000, repoRetentionAge: Long = 5 * 1000L)(body: (ActorRef, MemoryPlayTraceTreeRepository, Future[Boolean]) ⇒ Unit): Unit = {
