@@ -75,12 +75,9 @@ class RootJsonRepresentation(override val baseUrl: Option[String], system: Actor
   def writeGeneralDescription(gen: JsonGenerator): Unit = {
     gen.writeStringField("description",
       """|
-         |Atmos Monitoring is a tailor-made tracing and monitoring product for event-driven Akka actor based systems.
+         |Monitoring is a tailor-made tracing and monitoring product for event-driven Akka actor based systems.
          |It captures the asynchronous processing, and links the events into meaningful trace flows across actors and
          |remote nodes. Aggregated metrics and detailed trace flows are accessible through a REST API, described here.
-         |
-         |The REST API provides an easy way to integrate Atmos with other products for
-         |monitoring and surveillance.
          |
          |Several queries supports search in two dimensions; scope and time.
          |

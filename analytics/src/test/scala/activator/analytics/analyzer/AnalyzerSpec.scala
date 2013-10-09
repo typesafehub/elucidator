@@ -195,8 +195,7 @@ object AnalyzerSpec {
   }
 
   val testConfig = """
-    atmos {
-      trace.receive.port = 0
+    activator {
       analytics.retry-delay = 1 second
     }"""
 }

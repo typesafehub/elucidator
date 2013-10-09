@@ -7,7 +7,7 @@ import akka.actor.ActorSystem
 import activator.analytics.repository._
 import com.typesafe.atmos.trace.store.LocalMemoryTraceRepository
 
-class LocalMemoryAtmosRepository(system: ActorSystem) {
+class LocalMemoryRepository(system: ActorSystem) {
   def actorStatsRepository = LocalMemoryActorStatsRepository
   def dispatcherTimeSeriesRepository = LocalMemoryDispatcherTimeSeriesRepository
   def errorStatsRepository = LocalMemoryErrorStatsRepository

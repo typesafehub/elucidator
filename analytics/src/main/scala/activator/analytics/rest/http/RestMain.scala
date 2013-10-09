@@ -21,7 +21,7 @@ object RestMain {
     try {
       if (args.length >= 1) args(0)
       else if (System.getProperty("query.http.interface") != null) System.getProperty("query.http.interface")
-      else system.settings.config.getString("atmos.query.interface")
+      else system.settings.config.getString("activator.query.interface")
     } catch {
       case e: Exception ⇒ "localhost"
     }
@@ -30,7 +30,7 @@ object RestMain {
     try {
       if (args.length >= 2) args(1).toInt
       else if (System.getProperty("query.http.port") != null) System.getProperty("query.http.port").toInt
-      else system.settings.config.getInt("atmos.query.port")
+      else system.settings.config.getInt("activator.query.port")
     } catch {
       case e: Exception ⇒ 9898
     }

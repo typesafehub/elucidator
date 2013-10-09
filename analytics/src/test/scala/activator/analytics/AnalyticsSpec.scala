@@ -36,7 +36,7 @@ object AnalyticsSpec {
         }
       }
 
-      atmos {
+      activator {
         analytics {
           ignore-span-types = []
           ignore-span-time-series = []
@@ -80,7 +80,7 @@ abstract class AnalyticsSpec(_system: ActorSystem) extends TestKit(_system) with
 
   def config: Config = system.settings.config
 
-  def timeoutHandler = TimeoutHandler(config.getInt("atmos.test.time-factor"))
+  def timeoutHandler = TimeoutHandler(config.getInt("activator.test.time-factor"))
 
   val timeFactor = timeoutHandler.factor
 

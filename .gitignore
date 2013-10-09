@@ -37,5 +37,3 @@ RUNNING_PID
 /console/bin
 .jvmopts
 var/
-atmos.dir_IS_UNDEFINED/
-demo.dir_IS_UNDEFINED/

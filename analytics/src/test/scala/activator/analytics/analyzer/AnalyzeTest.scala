@@ -29,7 +29,7 @@ trait AnalyzeTest extends BeforeAndAfterEach { this: WordSpec ⇒
 
   def awaitStop(actor: ActorRef): Unit = awaitStop(Seq(actor))
 
-  private val handler = TimeoutHandler(system.settings.config.getInt("atmos.test.time-factor"))
+  private val handler = TimeoutHandler(system.settings.config.getInt("activator.test.time-factor"))
 
   def awaitStop(actors: Seq[ActorRef]): Unit = {
     for (a ← actors) {
