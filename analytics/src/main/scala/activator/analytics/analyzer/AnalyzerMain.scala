@@ -19,7 +19,7 @@ object AnalyzerMain {
 class AnalyzerMain {
   def startup() {
     val config = ConfigFactory.load()
-    config.checkValid(ConfigFactory.defaultReference, "atmos")
+    config.checkValid(ConfigFactory.defaultReference, "activator")
     AnalyzerManager.create(config)
   }
 

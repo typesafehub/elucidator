@@ -3,8 +3,8 @@
  */
 package activator.analytics.analyzer
 
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace._
+import com.typesafe.trace.uuid.UUID
 import scala.language.implicitConversions
 import scala.util.control.Exception._
 import activator.analytics.data.{ RequestSummaryType, PlayRequestSummary }

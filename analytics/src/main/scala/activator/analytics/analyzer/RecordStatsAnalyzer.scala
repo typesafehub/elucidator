@@ -6,8 +6,8 @@ package activator.analytics.analyzer
 import akka.actor.ActorRef
 import activator.analytics.data.{ TimeRange, Group, RecordStatsMetrics, RecordStats }
 import activator.analytics.repository.RecordStatsRepository
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
+import com.typesafe.trace._
+import com.typesafe.trace.store.TraceRetrievalRepository
 import scala.collection.mutable.ArrayBuffer
 
 class RecordStatsAnalyzer(

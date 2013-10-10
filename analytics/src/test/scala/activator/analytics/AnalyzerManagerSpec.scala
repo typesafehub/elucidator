@@ -3,7 +3,7 @@
  */
 package activator.analytics
 
-import com.typesafe.atmos.trace.ReceiveMain
+import com.typesafe.trace.ReceiveMain
 import org.scalatest.matchers.MustMatchers
 import scala.concurrent._
 import scala.concurrent.duration._

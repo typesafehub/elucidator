@@ -9,8 +9,8 @@ import activator.analytics.data._
 import activator.analytics.data.BasicTypes._
 import activator.analytics.metrics.{ RateMetric, PairMetric }
 import activator.analytics.repository.ActorStatsRepository
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
+import com.typesafe.trace._
+import com.typesafe.trace.store.TraceRetrievalRepository
 
 import java.util.concurrent.TimeUnit._
 import scala.collection.immutable.Queue

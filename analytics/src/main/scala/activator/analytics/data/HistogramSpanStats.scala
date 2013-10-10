@@ -5,7 +5,7 @@ package activator.analytics.data
 
 import akka.actor.ActorSystem
 import activator.analytics.metrics.HistogramMetric
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.uuid.UUID
 import java.util.concurrent.TimeUnit.MICROSECONDS
 import scala.concurrent.duration._
 import activator.analytics.AnalyticsExtension
@@ -38,13 +38,13 @@ case class HistogramSpanStats(
 
 object HistogramSpanStats {
   /**
-   * Configuration property atmos.analytics.storageBucketBoundariesMicros.default.
+   * Configuration property activator.analytics.storageBucketBoundariesMicros.default.
    * Defines the bucket boundaries in microseconds of the histogram statistics.
    * The format is comma separated values "100, 200, 300", or width times number of buckets
    * "100x3", or a mix of both "20x4, 100, 200, 300, 700, 1000x4".
    * Default is "100x9, 1000x9, 10000x9, 1000000x9"
    * The boundaries can also be configured by span type, or user defined marker span name,
-   * e.g. atmos.analytics.bucketBoundariesMicros.mailbox.
+   * e.g. activator.analytics.bucketBoundariesMicros.mailbox.
    */
   def DefaultBucketBoundaries(implicit system: ActorSystem): IndexedSeq[Long] = {
     mapConfigBucketBoundaries(AnalyticsExtension(system).DefaultStorageBucketBoundariesMicros)
@@ -56,10 +56,10 @@ object HistogramSpanStats {
   }
 
   def configBucketBoundaries(name: String, prefix: String = "storage")(implicit system: ActorSystem): IndexedSeq[Long] = {
-    if (system.settings.config.hasPath("atmos.analytics." + prefix + "-bucket-boundaries-micros." + name)) {
-      mapConfigBucketBoundaries(system.settings.config.getString("atmos.analytics." + prefix + "-bucket-boundaries-micros." + name))
-    } else if (system.settings.config.hasPath("atmos.analytics." + prefix + "-bucket-boundaries-micros.default")) {
-      mapConfigBucketBoundaries(system.settings.config.getString("atmos.analytics." + prefix + "-bucket-boundaries-micros.default"))
+    if (system.settings.config.hasPath("activator.analytics." + prefix + "-bucket-boundaries-micros." + name)) {
+      mapConfigBucketBoundaries(system.settings.config.getString("activator.analytics." + prefix + "-bucket-boundaries-micros." + name))
+    } else if (system.settings.config.hasPath("activator.analytics." + prefix + "-bucket-boundaries-micros.default")) {
+      mapConfigBucketBoundaries(system.settings.config.getString("activator.analytics." + prefix + "-bucket-boundaries-micros.default"))
     } else {
       DefaultBucketBoundaries
     }

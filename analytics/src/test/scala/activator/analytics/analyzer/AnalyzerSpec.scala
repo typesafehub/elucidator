@@ -5,10 +5,10 @@ package activator.analytics.analyzer
 
 import akka.actor._
 import activator.analytics.data._
-import com.typesafe.atmos.subscribe.{ Notification, Notifications }
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.util.Uuid
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.subscribe.{ Notification, Notifications }
+import com.typesafe.trace._
+import com.typesafe.trace.util.Uuid
+import com.typesafe.trace.uuid.UUID
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.CountDownLatch
 import activator.analytics.AnalyticsSpec

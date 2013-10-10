@@ -5,7 +5,7 @@ package activator.analytics.analyzer
 
 import activator.analytics.data.{ MailboxKey, Mailbox }
 import activator.analytics.metrics.PairMetric
-import com.typesafe.atmos.util.Uuid
+import com.typesafe.trace.util.Uuid
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import java.util.concurrent.TimeUnit.SECONDS
 import org.scalatest.matchers.MustMatchers

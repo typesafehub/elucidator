@@ -9,7 +9,7 @@ import activator.analytics.data._
 import activator.analytics.data.Span
 import activator.analytics.metrics.{ LatestSample, UniformSample, PercentilesMetrics }
 import activator.analytics.repository.PercentilesSpanStatsRepository
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
+import com.typesafe.trace.store.TraceRetrievalRepository
 import TimeRange.hourRange
 import activator.analytics.AnalyticsExtension
 

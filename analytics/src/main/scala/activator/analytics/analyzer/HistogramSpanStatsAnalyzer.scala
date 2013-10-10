@@ -9,7 +9,7 @@ import activator.analytics.data._
 import activator.analytics.data.{ TimeRange, Span, Scope, HistogramSpanStats }
 import activator.analytics.metrics.HistogramMetric
 import activator.analytics.repository.HistogramSpanStatsRepository
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
+import com.typesafe.trace.store.TraceRetrievalRepository
 
 class HistogramSpanStatsAnalyzer(
   pathLevel: Option[Boolean],

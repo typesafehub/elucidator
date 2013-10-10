@@ -1,7 +1,7 @@
 package activator.analytics.common
 
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace._
+import com.typesafe.trace.uuid.UUID
 import scala.collection.immutable.Stream
 import activator.analytics.data.{ PlayRequestSummary, RequestSummaryType, TimeMark }
 

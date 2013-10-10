@@ -4,7 +4,7 @@
 package activator.analytics.data
 
 import activator.analytics.data.BasicTypes.{ DurationNanos, Timestamp }
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.uuid.UUID
 
 /**
  * All, or sampled, durations of the spans that belong to the scope and

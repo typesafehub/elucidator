@@ -7,7 +7,7 @@ import akka.actor.ActorSystem
 import activator.analytics.analyzer.{ AnalyzerBoot }
 import activator.analytics.data.{ TimeRange, Span }
 
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.uuid.UUID
 import scala.collection.mutable.{ Map ⇒ MutableMap }
 
 trait SpanRepository {

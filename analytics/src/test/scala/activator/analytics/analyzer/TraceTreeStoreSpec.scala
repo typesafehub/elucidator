@@ -4,7 +4,7 @@
 package activator.analytics.analyzer
 
 import akka.actor.{ Props, ActorRef, PoisonPill }
-import com.typesafe.atmos.trace.{ TraceEvents, TraceEvent }
+import com.typesafe.trace.{ TraceEvents, TraceEvent }
 import activator.analytics.common.TraceExample
 import activator.analytics.repository.MemoryPlayTraceTreeRepository
 import scala.concurrent.{ Promise, Future, Await }

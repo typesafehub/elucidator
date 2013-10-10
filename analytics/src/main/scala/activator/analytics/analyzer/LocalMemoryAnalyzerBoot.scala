@@ -6,9 +6,9 @@ package activator.analytics.analyzer
 import akka.actor._
 import collection.mutable.ListBuffer
 import activator.analytics.repository._
-import com.typesafe.atmos.subscribe.SubscribeMessages.Ack
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.trace.store.MemoryTraceEventListener
+import com.typesafe.trace.subscribe.SubscribeMessages.Ack
+import com.typesafe.trace._
+import com.typesafe.trace.store.MemoryTraceEventListener
 import com.typesafe.config.Config
 
 /**
@@ -49,8 +49,8 @@ class LocalMemoryAnalyzerBoot(val system: ActorSystem, receiver: Option[TraceRec
    */
   def createAnalyzer() = new Analyzer(this)
 
-  val analyzer = system.actorOf(Props(createAnalyzer).withDispatcher(Analyzer.dispatcherId), "atmos-analyzer")
-  val batcher = system.actorOf(Props(new Batcher(analyzer)).withDispatcher(Analyzer.dispatcherId), "atmos-batcher")
+  val analyzer = system.actorOf(Props(createAnalyzer).withDispatcher(Analyzer.dispatcherId), "activator-analyzer")
+  val batcher = system.actorOf(Props(new Batcher(analyzer)).withDispatcher(Analyzer.dispatcherId), "activator-batcher")
 
   LocalMemoryAnalyzerBoot.addBootFor(traceReceiver, this)
 

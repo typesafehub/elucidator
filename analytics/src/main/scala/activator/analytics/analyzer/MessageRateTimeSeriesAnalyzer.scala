@@ -9,8 +9,8 @@ import activator.analytics.data.BasicTypes.Timestamp
 import activator.analytics.data.TimeRange.minuteRange
 import activator.analytics.metrics.RateMetric
 import activator.analytics.repository.MessageRateTimeSeriesRepository
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
+import com.typesafe.trace._
+import com.typesafe.trace.store.TraceRetrievalRepository
 
 class MessageRateTimeSeriesAnalyzer(
   pathLevel: Option[Boolean],

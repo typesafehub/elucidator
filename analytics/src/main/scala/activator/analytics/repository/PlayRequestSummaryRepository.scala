@@ -4,7 +4,7 @@
 package activator.analytics.repository
 
 import activator.analytics.data._
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.uuid.UUID
 
 trait PlayRequestSummaryRepository {
   def save(summary: PlayRequestSummary): Unit

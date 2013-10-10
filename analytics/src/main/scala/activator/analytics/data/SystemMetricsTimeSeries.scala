@@ -3,8 +3,8 @@
  */
 package activator.analytics.data
 
-import com.typesafe.atmos.trace.SystemMetrics
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.SystemMetrics
+import com.typesafe.trace.uuid.UUID
 
 case class SystemMetricsTimeSeries(
   timeRange: TimeRange,

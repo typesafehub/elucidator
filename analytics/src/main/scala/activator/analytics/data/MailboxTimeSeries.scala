@@ -4,7 +4,7 @@
 package activator.analytics.data
 
 import activator.analytics.data.BasicTypes.{ DurationNanos, Timestamp }
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.uuid.UUID
 
 /**
  * Current mailbox size and message waiting time in mailbox at a specific point in time.

@@ -8,8 +8,8 @@ import activator.analytics.analyzer.Analyzer.SimpleAck
 import activator.analytics.data._
 import activator.analytics.data.BasicTypes.Timestamp
 import activator.analytics.data.TimeRange._
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
+import com.typesafe.trace._
+import com.typesafe.trace.store.TraceRetrievalRepository
 import java.util.concurrent.TimeUnit
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
@@ -241,7 +241,7 @@ case object FlushStatsStoreWorker
 object StatsAnalyzer {
   final val PurgeUnusedMillis = TimeUnit.MILLISECONDS.convert(3, TimeUnit.MINUTES)
   val MaxEventsInTrace = SpanBuilder.MaxEventsInTrace
-  val StatsStoreWorkerDispatcherId = "atmos.analytics.store-dispatcher"
+  val StatsStoreWorkerDispatcherId = "activator.analytics.store-dispatcher"
 }
 
 trait SpanStatsAnalyzer extends StatsAnalyzer {

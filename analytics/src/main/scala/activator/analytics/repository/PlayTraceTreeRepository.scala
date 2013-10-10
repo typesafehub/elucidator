@@ -4,8 +4,8 @@
 package activator.analytics.repository
 
 import activator.analytics.data._
-import com.typesafe.atmos.uuid.UUID
-import com.typesafe.atmos.trace.TraceEvent
+import com.typesafe.trace.uuid.UUID
+import com.typesafe.trace.TraceEvent
 
 trait PlayTraceTreeRepository {
   def save(trace: UUID, batch: Seq[TraceEvent]): Unit

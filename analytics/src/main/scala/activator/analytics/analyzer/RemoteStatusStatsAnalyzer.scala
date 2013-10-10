@@ -6,9 +6,9 @@ package activator.analytics.analyzer
 import akka.actor.ActorRef
 import activator.analytics.data.{ TimeRange, RemoteStatusStatsMetrics, RemoteStatusStats }
 import activator.analytics.repository.RemoteStatusStatsRepository
-import com.typesafe.atmos.trace.{ RemoteStatus, RemotingLifecycle }
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
-import com.typesafe.atmos.trace.TraceEvent
+import com.typesafe.trace.{ RemoteStatus, RemotingLifecycle }
+import com.typesafe.trace.store.TraceRetrievalRepository
+import com.typesafe.trace.TraceEvent
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.{ Map ⇒ MutableMap }

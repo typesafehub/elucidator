@@ -6,10 +6,10 @@ package activator.analytics.analyzer
 import akka.actor._
 import activator.analytics.data.TimeRange
 import activator.analytics.repository.MemoryRemoteStatusStatsRepository
-import com.typesafe.atmos.trace.RemoteStatus
-import com.typesafe.atmos.trace.RemoteStatusType.RemoteClientWriteFailedType
-import com.typesafe.atmos.trace.store.MemoryTraceRepository
-import com.typesafe.atmos.trace.TraceEvents
+import com.typesafe.trace.RemoteStatus
+import com.typesafe.trace.RemoteStatusType.RemoteClientWriteFailedType
+import com.typesafe.trace.store.MemoryTraceRepository
+import com.typesafe.trace.TraceEvents
 import java.util.concurrent.CountDownLatch
 import activator.analytics.AnalyticsSpec
 

@@ -3,8 +3,8 @@
  */
 package activator.analytics.common
 
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace._
+import com.typesafe.trace.uuid.UUID
 
 object TraceExample {
   val traceId = new UUID("a7f95af1-cfa0-11e2-9eba-3ca9f4061590")

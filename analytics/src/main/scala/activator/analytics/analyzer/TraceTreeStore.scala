@@ -7,8 +7,8 @@ import akka.actor.{ Actor, ActorRef, Cancellable, ActorLogging }
 import activator.analytics.data._
 import activator.analytics.data.BasicTypes._
 import activator.analytics.repository.PlayTraceTreeRepository
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace._
+import com.typesafe.trace.uuid.UUID
 import java.util.concurrent.TimeUnit._
 import scala.collection.mutable.{ HashMap, Queue, ArrayBuffer }
 import scala.concurrent.duration._

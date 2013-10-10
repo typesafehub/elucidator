@@ -8,7 +8,7 @@ import collection.mutable.ArrayBuffer
 import activator.analytics.data._
 import activator.analytics.metrics.SummaryMetrics
 import activator.analytics.repository.SummarySpanStatsRepository
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
+import com.typesafe.trace.store.TraceRetrievalRepository
 
 class SummarySpanStatsAnalyzer(
   pathLevel: Option[Boolean],

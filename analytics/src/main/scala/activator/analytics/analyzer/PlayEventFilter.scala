@@ -3,7 +3,7 @@
  */
 package activator.analytics.analyzer
 
-import com.typesafe.atmos.trace._
+import com.typesafe.trace._
 import akka.actor.{ Actor, ActorRef, ActorLogging }
 
 object PlayEventFilter {

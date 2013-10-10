@@ -104,11 +104,10 @@ object ProguardConf {
       |-keep public class ch.qos.logback.** { *; }
       |-keep public class org.slf4j.** { *; }
       |
-      |# atmos
-      |# TODO: switch to com.typesafe.trace when updated to echo
-      |-keepnames class * implements com.typesafe.atmos.trace.Annotation
-      |-keepnames class * implements com.typesafe.atmos.trace.Info
-      |-keepnames class * implements com.typesafe.atmos.trace.SysMsg
-      |-keep class * extends com.typesafe.atmos.trace.TraceEventListener { public <init>(...); }
+      |# trace
+      |-keepnames class * implements com.typesafe.trace.Annotation
+      |-keepnames class * implements com.typesafe.trace.Info
+      |-keepnames class * implements com.typesafe.trace.SysMsg
+      |-keep class * extends com.typesafe.trace.TraceEventListener { public <init>(...); }
     """.stripMargin
 }

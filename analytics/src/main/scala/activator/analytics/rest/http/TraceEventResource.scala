@@ -6,9 +6,9 @@ package activator.analytics.rest.http
 import akka.actor.{ ActorSystem, Actor }
 import activator.analytics.data.{ TimeRangeType, TimeRange, SpanType, Span }
 import activator.analytics.repository.SpanRepository
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.uuid.UUID
-import com.typesafe.atmos.util.Uuid
+import com.typesafe.trace._
+import com.typesafe.trace.uuid.UUID
+import com.typesafe.trace.util.Uuid
 import GatewayActor._
 import java.io.StringWriter
 import org.codehaus.jackson.JsonGenerator

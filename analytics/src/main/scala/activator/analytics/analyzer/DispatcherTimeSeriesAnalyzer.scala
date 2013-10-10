@@ -6,9 +6,9 @@ package activator.analytics.analyzer
 import akka.actor.ActorRef
 import activator.analytics.data.{ TimeRange, DispatcherTimeSeriesPoint, DispatcherTimeSeries }
 import activator.analytics.repository.DispatcherTimeSeriesRepository
-import com.typesafe.atmos.trace.DispatcherStatus
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
-import com.typesafe.atmos.trace.TraceEvent
+import com.typesafe.trace.DispatcherStatus
+import com.typesafe.trace.store.TraceRetrievalRepository
+import com.typesafe.trace.TraceEvent
 
 import scala.collection.mutable.ArrayBuffer
 import TimeRange.minuteRange

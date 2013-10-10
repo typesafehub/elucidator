@@ -7,8 +7,8 @@ import akka.actor._
 import activator.analytics.data.{ TimeRange, Scope }
 import activator.analytics.metrics.RateMetric
 import activator.analytics.repository.MemoryActorStatsRepository
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.trace.store.MemoryTraceEventListener
+import com.typesafe.trace._
+import com.typesafe.trace.store.MemoryTraceEventListener
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit._
 import activator.analytics.AnalyticsSpec
@@ -187,7 +187,7 @@ class ActorStatsAnalyzerSpec extends AnalyticsSpec(ActorStatsAnalyzerSpec.testCo
 
 object ActorStatsAnalyzerSpec {
   val testConfig = """
-    atmos {
+    activator {
       trace.receive.port = 0
       analytics {
         ignore-span-types = []

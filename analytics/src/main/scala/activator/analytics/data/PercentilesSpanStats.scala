@@ -5,7 +5,7 @@ package activator.analytics.data
 
 import akka.actor.ActorSystem
 import activator.analytics.data.BasicTypes.DurationNanos
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.uuid.UUID
 import activator.analytics.AnalyticsExtension
 
 /**

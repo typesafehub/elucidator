@@ -6,8 +6,8 @@ package activator.analytics.analyzer
 import akka.actor.ActorRef
 import akka.actor.ActorSystem
 import akka.pattern.gracefulStop
-import com.typesafe.atmos.trace.Annotation
-import com.typesafe.atmos.trace.TraceEvent
+import com.typesafe.trace.Annotation
+import com.typesafe.trace.TraceEvent
 import java.net.{ InetAddress, UnknownHostException }
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.WordSpec

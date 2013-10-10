@@ -5,7 +5,7 @@ package activator.analytics.rest.http
 
 import akka.actor.ActorSystem
 import activator.analytics.repository._
-import com.typesafe.atmos.trace.store.LocalMemoryTraceRepository
+import com.typesafe.trace.store.LocalMemoryTraceRepository
 
 class LocalMemoryRepository(system: ActorSystem) {
   def actorStatsRepository = LocalMemoryActorStatsRepository

@@ -5,10 +5,10 @@ package activator.analytics.analyzer
 
 import activator.analytics.repository.MetadataStatsRepository
 import activator.analytics.data.{ MetadataStatsMetrics, Scope, TimeRange, MetadataStats }
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.trace.RemoteMessageSent
-import com.typesafe.atmos.trace.SysMsgCompleted
+import com.typesafe.trace.store.TraceRetrievalRepository
+import com.typesafe.trace._
+import com.typesafe.trace.RemoteMessageSent
+import com.typesafe.trace.SysMsgCompleted
 import akka.actor.ActorRef
 import scala.collection.mutable.ArrayBuffer
 

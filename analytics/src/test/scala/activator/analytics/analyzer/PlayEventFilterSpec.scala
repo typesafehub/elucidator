@@ -4,9 +4,9 @@
 package activator.analytics.analyzer
 
 import akka.actor.{ Props, ActorRef, PoisonPill }
-import com.typesafe.atmos.trace.{ TraceEvents, TraceEvent }
+import com.typesafe.trace.{ TraceEvents, TraceEvent }
 import activator.analytics.common.TraceExample
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.uuid.UUID
 import scala.concurrent._
 import scala.concurrent.duration._
 import activator.analytics.AnalyticsSpec

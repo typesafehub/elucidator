@@ -5,7 +5,7 @@ package activator.analytics.analyzer
 
 import akka.actor._
 import activator.analytics.repository.{ PlayStatsRepository, PlayTraceTreeRepository, PlayRequestSummaryRepository }
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
+import com.typesafe.trace.store.TraceRetrievalRepository
 import scala.concurrent.duration._
 
 object PlayAnalyzerConfiguration {

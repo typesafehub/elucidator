@@ -6,7 +6,7 @@ package activator.analytics.data
 import activator.analytics.data.BasicTypes._
 import activator.analytics.data.TimeRangeType.AllTime
 import activator.analytics.metrics.RateMetric
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.uuid.UUID
 import java.util.concurrent.TimeUnit.MICROSECONDS
 import java.util.concurrent.TimeUnit.NANOSECONDS
 

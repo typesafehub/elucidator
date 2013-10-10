@@ -3,7 +3,7 @@
  */
 package activator.analytics.data
 
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.uuid.UUID
 import scala.collection.immutable.Map
 import scala.collection.immutable.Set
 

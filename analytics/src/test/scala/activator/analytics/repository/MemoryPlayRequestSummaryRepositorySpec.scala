@@ -5,8 +5,8 @@ package activator.analytics.repository
 
 import activator.analytics.data._
 import activator.analytics.common.PlayRequestSummaryGenerator
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.util._
+import com.typesafe.trace._
+import com.typesafe.trace.util._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.MustMatchers
 import activator.analytics.AnalyticsSpec

@@ -4,7 +4,7 @@
 package activator.analytics.analyzer
 
 import akka.actor.{ Actor, ActorRef, FSM }
-import com.typesafe.atmos.trace.{ TraceEvents, TraceEvent }
+import com.typesafe.trace.{ TraceEvents, TraceEvent }
 import scala.concurrent._
 import scala.concurrent.duration._
 

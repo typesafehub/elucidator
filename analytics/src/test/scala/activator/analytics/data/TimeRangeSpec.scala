@@ -5,7 +5,7 @@ package activator.analytics.data
 
 import activator.analytics.data.TimeRange.{ dayRange, hourRange, minuteRange, monthRange }
 import activator.analytics.data.TimeRangeType.{ Days, Hours, Minutes, Months }
-import com.typesafe.atmos.util.UtcDateFormat
+import com.typesafe.trace.util.UtcDateFormat
 import java.util.Date
 import org.scalatest.matchers.MustMatchers
 import org.scalatest.WordSpec

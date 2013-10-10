@@ -6,16 +6,16 @@ package activator.analytics.analyzer
 import akka.actor.ActorRef
 import activator.analytics.data.{ TimeRange, SystemMetricsTimeSeriesPoint, SystemMetricsTimeSeries }
 import activator.analytics.repository.SystemMetricsTimeSeriesRepository
-import com.typesafe.atmos.trace.ActorCreated
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
-import com.typesafe.atmos.trace.SysMsgCompleted
-import com.typesafe.atmos.trace.SystemMetrics
-import com.typesafe.atmos.trace.SystemShutdown
-import com.typesafe.atmos.trace.SystemStarted
-import com.typesafe.atmos.trace.TempActorCreated
-import com.typesafe.atmos.trace.TempActorStopped
-import com.typesafe.atmos.trace.TerminateSysMsg
-import com.typesafe.atmos.trace.TraceEvent
+import com.typesafe.trace.ActorCreated
+import com.typesafe.trace.store.TraceRetrievalRepository
+import com.typesafe.trace.SysMsgCompleted
+import com.typesafe.trace.SystemMetrics
+import com.typesafe.trace.SystemShutdown
+import com.typesafe.trace.SystemStarted
+import com.typesafe.trace.TempActorCreated
+import com.typesafe.trace.TempActorStopped
+import com.typesafe.trace.TerminateSysMsg
+import com.typesafe.trace.TraceEvent
 
 import scala.collection.mutable.ArrayBuffer
 import TimeRange.minuteRange

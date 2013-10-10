@@ -17,7 +17,7 @@ object AnalyzerManager {
     system match {
       case Some(s) ⇒ false
       case None ⇒
-        config.checkValid(ConfigFactory.defaultReference, "atmos")
+        config.checkValid(ConfigFactory.defaultReference, "activator")
         val actorSystem = ActorSystem("Analyzer", config)
         new LocalMemoryAnalyzerBoot(actorSystem)
         system = Some(actorSystem)

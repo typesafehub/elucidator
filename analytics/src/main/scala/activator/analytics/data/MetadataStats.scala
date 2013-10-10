@@ -3,7 +3,7 @@
  */
 package activator.analytics.data
 
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.uuid.UUID
 
 case class MetadataStats(
   timeRange: TimeRange,

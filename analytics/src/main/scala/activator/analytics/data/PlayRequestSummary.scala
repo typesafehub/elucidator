@@ -3,8 +3,8 @@
  */
 package activator.analytics.data
 
-import com.typesafe.atmos.trace.{ ActionInvocationInfo, ActionResponseAnnotation, ActionRequestInfo }
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.{ ActionInvocationInfo, ActionResponseAnnotation, ActionRequestInfo }
+import com.typesafe.trace.uuid.UUID
 import activator.analytics.data.BasicTypes._
 
 sealed trait RequestSummaryType {

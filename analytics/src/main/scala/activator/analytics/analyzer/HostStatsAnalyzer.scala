@@ -6,7 +6,7 @@ package activator.analytics.analyzer
 import activator.analytics.repository.HostStatsRepository
 import activator.analytics.data.HostStats
 import akka.actor.{ Actor, ActorLogging }
-import com.typesafe.atmos.trace.{ SystemStarted, TraceEvents }
+import com.typesafe.trace.{ SystemStarted, TraceEvents }
 
 class HostStatsAnalyzer(hostStatsRepository: HostStatsRepository) extends Actor with ActorLogging {
   def receive = {

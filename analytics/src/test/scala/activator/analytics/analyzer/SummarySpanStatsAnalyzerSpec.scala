@@ -6,10 +6,10 @@ package activator.analytics.analyzer
 import akka.actor._
 import activator.analytics.data.{ TimeRange, Spans, Span, Scope }
 import activator.analytics.repository.MemorySummarySpanStatsRepository
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.trace.Batch
-import com.typesafe.atmos.trace.store.MemoryTraceRepository
-import com.typesafe.atmos.util.Uuid
+import com.typesafe.trace._
+import com.typesafe.trace.Batch
+import com.typesafe.trace.store.MemoryTraceRepository
+import com.typesafe.trace.util.Uuid
 import java.util.concurrent.CountDownLatch
 import scala.concurrent.duration._
 import activator.analytics.AnalyticsSpec

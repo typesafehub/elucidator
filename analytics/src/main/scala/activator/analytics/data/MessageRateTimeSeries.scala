@@ -4,7 +4,7 @@
 package activator.analytics.data
 
 import activator.analytics.data.BasicTypes.Timestamp
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.uuid.UUID
 
 /**
  * Current messages per second at a specific point in time, measured

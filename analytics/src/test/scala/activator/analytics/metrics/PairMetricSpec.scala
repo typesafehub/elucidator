@@ -3,7 +3,7 @@
  */
 package activator.analytics.metrics
 
-import com.typesafe.atmos.util.Uuid
+import com.typesafe.trace.util.Uuid
 import org.scalatest.matchers.MustMatchers
 import org.scalatest.WordSpec
 

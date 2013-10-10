@@ -27,7 +27,7 @@ def formattingPreferences = {
 lazy val analytics =
 		project.in( file("analytics") )
 	.settings(formatSettings:_*)
-	.settings(libraryDependencies ++= Dependencies.analyticsDependencies)
+	.settings(Dependencies.analyticsDependencies:_*)
     .settings(ProguardConf.analyticsSettings:_*)
 
 // *** RUNNER ***

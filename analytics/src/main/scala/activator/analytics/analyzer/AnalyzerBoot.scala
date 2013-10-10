@@ -5,7 +5,7 @@ package activator.analytics.analyzer
 
 import akka.actor.ActorSystem
 import activator.analytics.repository._
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
+import com.typesafe.trace.store.TraceRetrievalRepository
 
 /**
  * Common things to implement for the analyzer types

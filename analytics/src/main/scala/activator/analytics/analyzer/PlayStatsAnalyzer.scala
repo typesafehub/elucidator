@@ -9,8 +9,8 @@ import activator.analytics.data._
 import activator.analytics.data.BasicTypes._
 import activator.analytics.metrics.RateMetric
 import activator.analytics.repository.PlayStatsRepository
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
+import com.typesafe.trace._
+import com.typesafe.trace.store.TraceRetrievalRepository
 import scala.collection.mutable.HashMap
 import scala.concurrent.duration._
 import scala.unchecked

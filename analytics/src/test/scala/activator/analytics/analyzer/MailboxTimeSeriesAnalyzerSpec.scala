@@ -6,8 +6,8 @@ package activator.analytics.analyzer
 import akka.actor._
 import activator.analytics.data.TimeRange
 import activator.analytics.repository.MemoryMailboxTimeSeriesRepository
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.trace.store.MemoryTraceRepository
+import com.typesafe.trace._
+import com.typesafe.trace.store.MemoryTraceRepository
 import java.util.concurrent.CountDownLatch
 import scala.concurrent.duration._
 import activator.analytics.AnalyticsSpec

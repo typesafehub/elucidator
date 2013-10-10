@@ -4,7 +4,7 @@
 package activator.analytics.data
 
 import activator.analytics.data.TimeRange.minuteRange
-import com.typesafe.atmos.util.UtcDateFormat
+import com.typesafe.trace.util.UtcDateFormat
 import java.util.Date
 import org.junit.runner.RunWith
 import org.scalatest.matchers.MustMatchers

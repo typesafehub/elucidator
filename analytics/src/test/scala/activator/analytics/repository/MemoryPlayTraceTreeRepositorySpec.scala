@@ -5,9 +5,9 @@ package activator.analytics.repository
 
 import activator.analytics.data._
 import activator.analytics.common.TraceExample
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.util._
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace._
+import com.typesafe.trace.util._
+import com.typesafe.trace.uuid.UUID
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.MustMatchers
 import activator.analytics.AnalyticsSpec

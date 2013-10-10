@@ -3,7 +3,7 @@
  */
 package activator.analytics.metrics
 
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.uuid.UUID
 import scala.collection.mutable
 
 object PairMetric {

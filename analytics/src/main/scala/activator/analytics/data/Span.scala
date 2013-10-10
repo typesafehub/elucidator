@@ -5,7 +5,7 @@ package activator.analytics.data
 
 import activator.analytics.data.BasicTypes._
 import activator.analytics.data.SpanType.PredefinedSpanTypesNamePrefix
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.uuid.UUID
 import scala.concurrent.duration._
 import TimeRangeType.AllTime
 

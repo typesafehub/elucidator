@@ -4,7 +4,7 @@
 package activator.analytics.repository
 
 import activator.analytics.data.{ TimeRange, SystemMetricsTimeSeries, BasicTypes }
-import com.typesafe.atmos.util.ExpectedFailureException
+import com.typesafe.trace.util.ExpectedFailureException
 
 /**
  * Used to simulate exception from repository

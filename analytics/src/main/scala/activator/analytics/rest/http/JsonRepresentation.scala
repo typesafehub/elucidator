@@ -6,7 +6,7 @@ package activator.analytics.rest.http
 import akka.actor.ActorSystem
 import activator.analytics.data.BasicTypes.{ Bytes, DurationNanos, Timestamp }
 import activator.analytics.data.{ TimeRange, Scope, BasicTypes }
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.uuid.UUID
 import java.io.Writer
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit

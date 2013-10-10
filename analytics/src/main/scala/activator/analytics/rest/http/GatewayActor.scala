@@ -7,7 +7,7 @@ import akka.actor.{ Props, ActorLogging, Actor }
 import spray.can.Http
 import spray.http._
 import spray.http.HttpResponse
-import com.typesafe.atmos.trace.TraceEvent
+import com.typesafe.trace.TraceEvent
 import activator.analytics.AnalyticsExtension
 
 case class JRequest(req: HttpRequest)

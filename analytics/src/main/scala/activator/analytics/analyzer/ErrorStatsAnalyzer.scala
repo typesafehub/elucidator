@@ -6,8 +6,8 @@ package activator.analytics.analyzer
 import akka.actor.ActorRef
 import activator.analytics.data._
 import activator.analytics.repository.ErrorStatsRepository
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
+import com.typesafe.trace._
+import com.typesafe.trace.store.TraceRetrievalRepository
 import scala.collection.mutable.ArrayBuffer
 import activator.analytics.AnalyticsExtension
 

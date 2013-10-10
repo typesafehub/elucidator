@@ -4,10 +4,10 @@
 package activator.analytics.analyzer
 
 import activator.analytics.data._
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.trace.store.MemoryTraceEventListener
-import com.typesafe.atmos.util.Uuid
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace._
+import com.typesafe.trace.store.MemoryTraceEventListener
+import com.typesafe.trace.util.Uuid
+import com.typesafe.trace.uuid.UUID
 import scala.annotation.tailrec
 import scala.concurrent.duration._
 import activator.analytics.AnalyticsSpec

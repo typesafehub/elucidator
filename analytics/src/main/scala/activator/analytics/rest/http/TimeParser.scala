@@ -3,8 +3,8 @@
  */
 package activator.analytics.rest.http
 
-import com.typesafe.atmos.util.ThreadUtcDateFormat
-import com.typesafe.atmos.util.UtcDateFormat
+import com.typesafe.trace.util.ThreadUtcDateFormat
+import com.typesafe.trace.util.UtcDateFormat
 import java.text.ParseException
 import java.util.Date
 

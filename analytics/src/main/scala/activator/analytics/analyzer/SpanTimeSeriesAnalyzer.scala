@@ -6,7 +6,7 @@ package activator.analytics.analyzer
 import akka.actor.ActorRef
 import activator.analytics.data._
 import activator.analytics.repository.SpanTimeSeriesRepository
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
+import com.typesafe.trace.store.TraceRetrievalRepository
 
 import java.util.concurrent.TimeUnit
 import scala.collection.mutable.ArrayBuffer

@@ -6,8 +6,8 @@ package activator.analytics.analyzer
 import akka.actor._
 import activator.analytics.data.TimeRange
 import activator.analytics.repository.MemoryDispatcherTimeSeriesRepository
-import com.typesafe.atmos.trace.store.MemoryTraceRepository
-import com.typesafe.atmos.trace.{ TraceEvents, TraceEvent, DispatcherStatus, DispatcherMetrics }
+import com.typesafe.trace.store.MemoryTraceRepository
+import com.typesafe.trace.{ TraceEvents, TraceEvent, DispatcherStatus, DispatcherMetrics }
 import java.util.concurrent.CountDownLatch
 import activator.analytics.AnalyticsSpec
 

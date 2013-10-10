@@ -5,9 +5,9 @@ package activator.analytics.analyzer
 
 import akka.actor.ActorSystem
 import activator.analytics.data._
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
-import com.typesafe.atmos.util.Uuid
+import com.typesafe.trace._
+import com.typesafe.trace.store.TraceRetrievalRepository
+import com.typesafe.trace.util.Uuid
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.duration._

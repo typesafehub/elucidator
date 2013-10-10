@@ -6,13 +6,13 @@ package activator.analytics.analyzer
 import akka.actor._
 import activator.analytics.data.TimeRange
 import activator.analytics.repository.{ SpecialSystemMetricsTimeSeriesRepository, MemorySystemMetricsTimeSeriesRepository }
-import com.typesafe.atmos.trace.ActorCreated
-import com.typesafe.atmos.trace.ActorInfo
-import com.typesafe.atmos.trace.store.MemoryTraceRepository
-import com.typesafe.atmos.trace.SysMsgCompleted
-import com.typesafe.atmos.trace.SystemMetrics
-import com.typesafe.atmos.trace.TerminateSysMsg
-import com.typesafe.atmos.trace.TraceEvents
+import com.typesafe.trace.ActorCreated
+import com.typesafe.trace.ActorInfo
+import com.typesafe.trace.store.MemoryTraceRepository
+import com.typesafe.trace.SysMsgCompleted
+import com.typesafe.trace.SystemMetrics
+import com.typesafe.trace.TerminateSysMsg
+import com.typesafe.trace.TraceEvents
 import java.util.concurrent.CountDownLatch
 import activator.analytics.AnalyticsSpec
 

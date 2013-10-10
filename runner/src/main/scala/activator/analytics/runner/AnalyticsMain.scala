@@ -11,7 +11,7 @@ object AnalyticsMain {
   def main(args: Array[String]) {
     activator.analytics.rest.http.RestMain.main(Array())
 
-    com.typesafe.atmos.trace.ReceiveMain.main(Array())
+    com.typesafe.trace.ReceiveMain.main(Array())
 
     // must be last as it uses awaitTermination
     activator.analytics.analyzer.AnalyzerMain.main(Array())

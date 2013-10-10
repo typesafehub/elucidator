@@ -5,7 +5,7 @@ package activator.analytics.data
 
 import activator.analytics.data.BasicTypes.DurationNanos
 import activator.analytics.metrics.SummaryMetrics
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.uuid.UUID
 import scala.annotation.tailrec
 
 /**

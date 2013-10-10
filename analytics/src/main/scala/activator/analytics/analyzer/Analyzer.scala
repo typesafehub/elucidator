@@ -8,10 +8,10 @@ import akka.actor._
 import akka.actor.SupervisorStrategy._
 import Analyzer._
 import activator.analytics.data.{ Spans, SpanType }
-import com.typesafe.atmos.subscribe.Notifications
-import com.typesafe.atmos.subscribe.SubscribeMessages.{ Ack, EmptyAck }
-import com.typesafe.atmos.trace.TraceEvent
-import com.typesafe.atmos.trace.TraceEvents
+import com.typesafe.trace.subscribe.Notifications
+import com.typesafe.trace.subscribe.SubscribeMessages.{ Ack, EmptyAck }
+import com.typesafe.trace.TraceEvent
+import com.typesafe.trace.TraceEvents
 import java.lang.System.currentTimeMillis
 import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.duration._
@@ -251,7 +251,7 @@ object Analyzer {
   case object SimpleAck
   case class RetryTraceEvents(traceEvents: TraceEvents, retryCount: Int)
   case class RetryNotifications(notifications: Notifications, retryCount: Int)
-  val dispatcherId = "atmos.analytics.dispatcher"
+  val dispatcherId = "activator.analytics.dispatcher"
 }
 
 object AckAggregator {

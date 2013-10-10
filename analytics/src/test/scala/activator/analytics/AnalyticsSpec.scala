@@ -14,7 +14,7 @@ import scala.concurrent.duration._
 import akka.event.{ LoggingAdapter, Logging }
 import akka.event.Logging._
 import akka.event.slf4j.Slf4jEventHandler
-import com.typesafe.atmos.util.ExpectedFailureException
+import com.typesafe.trace.util.ExpectedFailureException
 
 object AnalyticsSpec {
   val testConf: Config = ConfigFactory.parseString("""

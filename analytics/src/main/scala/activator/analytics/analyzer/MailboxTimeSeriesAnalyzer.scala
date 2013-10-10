@@ -9,8 +9,8 @@ import activator.analytics.data.BasicTypes.Timestamp
 import activator.analytics.data.TimeRange.minuteRange
 import activator.analytics.metrics.PairMetric
 import activator.analytics.repository.MailboxTimeSeriesRepository
-import com.typesafe.atmos.trace._
-import com.typesafe.atmos.trace.store.TraceRetrievalRepository
+import com.typesafe.trace._
+import com.typesafe.trace.store.TraceRetrievalRepository
 
 class MailboxTimeSeriesAnalyzer(
   mailboxTimeSeriesRepository: MailboxTimeSeriesRepository,

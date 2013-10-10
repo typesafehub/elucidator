@@ -4,8 +4,8 @@
 package activator.analytics.data
 
 import activator.analytics.data.BasicTypes.Timestamp
-import com.typesafe.atmos.trace.DispatcherMetrics
-import com.typesafe.atmos.uuid.UUID
+import com.typesafe.trace.DispatcherMetrics
+import com.typesafe.trace.uuid.UUID
 
 case class DispatcherTimeSeries(
   timeRange: TimeRange,
