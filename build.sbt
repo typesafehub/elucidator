@@ -1,12 +1,13 @@
 name := "activator-analytics"
 
-organization := "com.typesafe.activator"
-
-version := "0.1-SNAPSHOT"
-
-scalaVersion := "2.10.3"
-
 parallelExecution in GlobalScope := false
+
+Defaults.defaultSettings ++ Seq(
+  publish := {},
+  publishLocal := {}
+)
+
+//publishTo := Some(privateRepo)
 
 // *** FORMATTING ***
 
@@ -22,19 +23,36 @@ def formattingPreferences = {
     .setPreference(AlignSingleLineCaseStatements, true)
 }
 
-// *** ANALYTICS ***
+// *** DEFAULT SETTINGS ***
+
+def defaultSettings = Seq(
+    organization := "com.typesafe.activator",
+    version := "0.1-SNAPSHOT",
+    scalaVersion := "2.10.3",
+    publishTo := Some(privateRepo),
+    publishArtifact in packageSrc := false,
+    publishArtifact in packageDoc := false
+  )
+
+// *** DISTRIBUTION SETTINGS ***
+
+val privateRepo = Resolver.url("activator-analytics-snapshot", new URL("https://private-repo.typesafe.com/typesafe/activator-analytics-snapshot"))
+
+// *** ANALYTICS PROJECT ***
 
 lazy val analytics =
 		project.in( file("analytics") )
+    .settings(defaultSettings:_*)
 	.settings(formatSettings:_*)
 	.settings(Dependencies.analyticsDependencies:_*)
     .settings(ProguardConf.analyticsSettings:_*)
 
-// *** RUNNER ***
+// *** RUNNER PROJECT ***
 
 mainClass in (Compile, run) := Some("activator.analytics.runner.AnalyticsMain")
 
 lazy val runner =
         project.in( file("runner") )
     .dependsOn(analytics)
+    .settings(defaultSettings:_*)
 	.settings(formatSettings:_*)
