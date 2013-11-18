@@ -33,7 +33,7 @@ trait AnalyzeTest extends BeforeAndAfterEach { this: WordSpec ⇒
 
   def awaitStop(actors: Seq[ActorRef]): Unit = {
     for (a ← actors) {
-      Await.ready(gracefulStop(a, handler.duration)(system), handler.duration)
+      Await.ready(gracefulStop(a, handler.duration), handler.duration)
       // additional stop to ensure that it is removed from system namespace before returning
       system.stop(a)
     }

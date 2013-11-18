@@ -50,7 +50,7 @@ class PlayAnalyzerConfiguration(system: ActorSystem,
 
   def awaitStop(actors: Seq[ActorRef], waitTime: FiniteDuration): Unit = {
     for (a ← actors) {
-      Await.ready(gracefulStop(a, waitTime)(system), waitTime)
+      Await.ready(gracefulStop(a, waitTime), waitTime)
       system.stop(a)
     }
   }

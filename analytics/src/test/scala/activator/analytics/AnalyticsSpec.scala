@@ -13,17 +13,17 @@ import org.scalatest.{ WordSpec, BeforeAndAfterAll }
 import scala.concurrent.duration._
 import akka.event.{ LoggingAdapter, Logging }
 import akka.event.Logging._
-import akka.event.slf4j.Slf4jEventHandler
+import akka.event.slf4j.Slf4jLogger
 import com.typesafe.trace.util.ExpectedFailureException
 
 object AnalyticsSpec {
   val testConf: Config = ConfigFactory.parseString("""
       akka {
-        # TestEventHandler suppresses "simulated" errors
-        event-handlers = ["activator.analytics.TestEventHandler"]
+        # TestLogger suppresses "simulated" errors
+        loggers = ["activator.analytics.TestLogger"]
         loglevel = WARNING
         stdout-loglevel = WARNING
-        event-handler-startup-timeout = 10s
+        logger-startup-timeout = 10s
 
         actor {
           default-dispatcher {
@@ -127,7 +127,7 @@ case class TimeoutHandler(factor: Int) {
  * Event handler that suppresses all errors with cause ExpectedFailureException
  * or errors and warnings with expected messages.
  */
-class TestEventHandler extends Slf4jEventHandler {
+class TestLogger extends Slf4jLogger {
   override def receive = suppress.orElse(super.receive)
 
   def suppress: Receive = {
