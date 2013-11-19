@@ -5,8 +5,6 @@ package activator.analytics.repository
 
 import activator.analytics.data._
 import activator.analytics.common.PlayRequestSummaryGenerator
-import com.typesafe.trace._
-import com.typesafe.trace.util._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.MustMatchers
 import activator.analytics.AnalyticsSpec
@@ -61,28 +59,93 @@ class MemoryPlayRequestSummaryRepositorySpec extends AnalyticsSpec with MustMatc
       val found3 = repository.find(one.traceId)
       found3 must be(None)
     }
-    "find summaries in a time range" in {
+
+    "find summaries in an ascending time range" in {
       val examples = PlayRequestSummaryGenerator.genStream.take(100).toSeq
-      val subset = PlayRequestSummary.sortByTime(examples).take(50)
+      val subset = examples.sortWith((a, b) ⇒
+        if (a.start.millis == b.start.millis) a.start.nanoTime < b.start.nanoTime
+        else a.start.millis < b.start.millis).take(50)
       val times = subset.map(_.start.millis)
       val startTime = times.head
       val endTime = times.last
       examples.foreach(repository.save)
-      val result = repository.findRequestsWithinTimePeriod(startTime, endTime, 1, 50)
+      val result = repository.findRequestsWithinTimePeriod(startTime, endTime, 0, 50, PlayStatsSorts.TimeSort, Sorting.ascendingSort)
       result.length must be(50)
       result.zip(subset).foreach { case (a, b) ⇒ a must be(b) }
     }
-    "find summaries in a time range with paging" in {
+
+    "find summaries in an descending time range" in {
+      val sortedOnTimeDescending =
+        PlayRequestSummaryGenerator.genStream.take(50).toSeq.sortWith((a, b) ⇒
+          if (a.start.millis == b.start.millis) a.start.nanoTime > b.start.nanoTime
+          else a.start.millis > b.start.millis)
+      val times = sortedOnTimeDescending.map(_.start.millis)
+      val startTime = times.last
+      val endTime = times.head
+      sortedOnTimeDescending.foreach(repository.save)
+      val result = repository.findRequestsWithinTimePeriod(startTime, endTime, 0, 50, PlayStatsSorts.TimeSort, Sorting.descendingSort)
+      result.length must be(50)
+      result.zip(sortedOnTimeDescending).foreach { case (a, b) ⇒ a must be(b) }
+    }
+
+    "find summaries in an ascending time range with paging" in {
       val examples = PlayRequestSummaryGenerator.genStream.take(100).toSeq
-      val subset = PlayRequestSummary.sortByTime(examples).take(50)
+      val subset = examples.sortWith((a, b) ⇒
+        if (a.start.millis == b.start.millis) a.start.nanoTime < b.start.nanoTime
+        else a.start.millis < b.start.millis).take(50)
       val times = subset.map(_.start.millis)
       val startTime = times.head
       val endTime = times.last
       examples.foreach(repository.save)
-      val result = repository.findRequestsWithinTimePeriod(startTime, endTime, 25, 50)
-      (result.length >= 25) must be(true)
+      val result = repository.findRequestsWithinTimePeriod(startTime, endTime, 24, 50, PlayStatsSorts.TimeSort, Sorting.ascendingSort)
       val asSet = examples.toSet
       result.foreach(v ⇒ asSet(v) must be(true))
     }
+
+    "find summaries sorted ascending on controller" in {
+      val sortedOnController =
+        PlayRequestSummaryGenerator.genStream.take(100).toSeq.sortWith((a, b) ⇒
+          a.invocationInfo.controller < b.invocationInfo.controller)
+      val sortedOnTime = sortedOnController.sortWith((a, b) ⇒
+        if (a.start.millis == b.start.millis) a.start.nanoTime < b.start.nanoTime
+        else a.start.millis < b.start.millis)
+      val times = sortedOnTime.map(_.start.millis)
+      sortedOnController.foreach(repository.save)
+      val result = repository.findRequestsWithinTimePeriod(times.head, times.last, 0, 50, PlayStatsSorts.ControllerSort, Sorting.ascendingSort)
+      result.length must equal(50)
+      result.zip(sortedOnController).foreach { case (a, b) ⇒ a must be(b) }
+    }
+
+    "find summaries sorted descending on controller" in {
+      val sortedOnController =
+        PlayRequestSummaryGenerator.genStream.take(100).toSeq.sortWith((a, b) ⇒
+          a.invocationInfo.controller > b.invocationInfo.controller)
+      val sortedOnTime = sortedOnController.sortWith((a, b) ⇒
+        if (a.start.millis == b.start.millis) a.start.nanoTime < b.start.nanoTime
+        else a.start.millis < b.start.millis)
+      val times = sortedOnTime.map(_.start.millis)
+      sortedOnController.foreach(repository.save)
+      val result = repository.findRequestsWithinTimePeriod(times.head, times.last, 0, 50, PlayStatsSorts.ControllerSort, Sorting.descendingSort)
+      result.length must equal(50)
+      result.zip(sortedOnController).foreach { case (a, b) ⇒ a must be(b) }
+    }
+
+    /*
+    "find summaries sorted on invocation time in millis" in {
+      def totalTimeMillis(prs: PlayRequestSummary): Long = (prs.end.nanoTime - prs.start.nanoTime) * 1000 * 1000
+
+      val sortedOnInvocationTime =
+        PlayRequestSummaryGenerator.genStream.take(50).toSeq.sortWith(
+          (a, b) ⇒ totalTimeMillis(a) < totalTimeMillis(b))
+      val sortedOnTime = sortedOnInvocationTime.sortWith((a, b) ⇒
+        if (a.start.millis == b.start.millis) a.start.nanoTime < b.start.nanoTime
+        else a.start.millis < b.start.millis)
+      val times = sortedOnTime.map(_.start.millis)
+      sortedOnInvocationTime.foreach(repository.save)
+      val result = repository.findRequestsWithinTimePeriod(times.head, times.last, 0, 50, PlayStatsSorts.TimeSort, Sorting.descendingSort)
+      result.length must equal(50)
+      result.zip(sortedOnInvocationTime).foreach { case (a, b) ⇒ a must be(b) }
+    }
+    */
   }
 }

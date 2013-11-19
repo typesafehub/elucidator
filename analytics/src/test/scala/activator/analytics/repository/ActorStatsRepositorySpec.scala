@@ -4,8 +4,9 @@
 package activator.analytics.repository
 
 import org.scalatest.matchers.MustMatchers
-import activator.analytics.data.{ ActorStatsSorts, Scope, TimeRange, ActorStats }
+import activator.analytics.data._
 import activator.analytics.AnalyticsSpec
+import scala.Some
 
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
 class ActorStatsRepositorySpec extends AnalyticsSpec with MustMatchers {
@@ -23,29 +24,48 @@ class ActorStatsRepositorySpec extends AnalyticsSpec with MustMatchers {
         ActorStats(TimeRange.minuteRange(now), Scope(path = Some("akka://AS/user/A/$Z"))))
       repo.save(stats)
 
-      val sortedName = repo.findSorted(
+      val sortedDescName = repo.findSorted(
         timeRange = TimeRange.minuteRange(now),
         scope = Scope(),
-        sortOn = ActorStatsSorts.ActorName,
         includeAnonymous = true,
         includeTemp = false,
-        limit = 100)
+        limit = 100,
+        sortOn = ActorStatsSorts.ActorName,
+        sortDirection = Sorting.descendingSort)
 
-      sortedName.stats.size must equal(6)
-      sortedName.stats(0).scope.path.get must equal("akka://AS/user/A/A")
-      sortedName.stats(1).scope.path.get must equal("akka://AS/user/A1/A1")
-      sortedName.stats(2).scope.path.get must equal("akka://AS/user/B/AB")
-      sortedName.stats(3).scope.path.get must equal("akka://AS/user/A/Z")
-      sortedName.stats(4).scope.path.get must equal("akka://AS/user/A/$A")
-      sortedName.stats(5).scope.path.get must equal("akka://AS/user/A/$Z")
+      sortedDescName.stats.size must equal(6)
+      sortedDescName.stats(0).scope.path.get must equal("akka://AS/user/A/A")
+      sortedDescName.stats(1).scope.path.get must equal("akka://AS/user/A1/A1")
+      sortedDescName.stats(2).scope.path.get must equal("akka://AS/user/B/AB")
+      sortedDescName.stats(3).scope.path.get must equal("akka://AS/user/A/Z")
+      sortedDescName.stats(4).scope.path.get must equal("akka://AS/user/A/$A")
+      sortedDescName.stats(5).scope.path.get must equal("akka://AS/user/A/$Z")
+
+      val sortedAscName = repo.findSorted(
+        timeRange = TimeRange.minuteRange(now),
+        scope = Scope(),
+        includeAnonymous = true,
+        includeTemp = false,
+        limit = 100,
+        sortOn = ActorStatsSorts.ActorName,
+        sortDirection = Sorting.ascendingSort)
+
+      sortedAscName.stats.size must equal(6)
+      sortedAscName.stats(0).scope.path.get must equal("akka://AS/user/A/$Z")
+      sortedAscName.stats(1).scope.path.get must equal("akka://AS/user/A/$A")
+      sortedAscName.stats(2).scope.path.get must equal("akka://AS/user/A/Z")
+      sortedAscName.stats(3).scope.path.get must equal("akka://AS/user/B/AB")
+      sortedAscName.stats(4).scope.path.get must equal("akka://AS/user/A1/A1")
+      sortedAscName.stats(5).scope.path.get must equal("akka://AS/user/A/A")
 
       val sortedPath = repo.findSorted(
         timeRange = TimeRange.minuteRange(now),
         scope = Scope(),
-        sortOn = ActorStatsSorts.ActorPath,
         includeAnonymous = true,
         includeTemp = false,
-        limit = 100)
+        limit = 100,
+        sortOn = ActorStatsSorts.ActorPath,
+        sortDirection = Sorting.descendingSort)
 
       sortedPath.stats.size must equal(6)
       sortedPath.stats(0).scope.path.get must equal("akka://AS/user/A/A")

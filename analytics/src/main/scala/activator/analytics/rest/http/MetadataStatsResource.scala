@@ -429,7 +429,7 @@ object MetadataStatsResource {
             case Right(node) ⇒
               val dispatcher = extractDispatcher(queryPath)
               val tag = extractTag(queryPath)
-              val offset = extractOffset(queryPath) getOrElse 1
+              val offset = extractOffset(queryPath) getOrElse 0
               val limit = extractLimit(queryPath) getOrElse defaultLimit
               val playPattern = extractPlayPattern(queryPath)
               val playController = extractPlayController(queryPath)

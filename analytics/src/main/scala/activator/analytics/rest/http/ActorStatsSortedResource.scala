@@ -11,6 +11,7 @@ import java.io.StringWriter
 import org.codehaus.jackson.JsonGenerator
 import spray.http.{ StatusCodes, HttpResponse, HttpRequest }
 import activator.analytics.AnalyticsExtension
+import activator.analytics.data.Sorting._
 
 class ActorStatsSortedResource(repository: ActorStatsRepository) extends RestResourceActor {
   import ActorStatsSortedResource._
@@ -28,11 +29,12 @@ class ActorStatsSortedResource(repository: ActorStatsRepository) extends RestRes
         val stats = repository.findSorted(
           timeRange = query.timeRange,
           scope = query.scope,
-          sortOn = query.sortOn,
           includeAnonymous = analyticsExtension.IncludeAnonymousActorPathsInMetadata,
           includeTemp = analyticsExtension.IncludeTempActorPathsInMetadata,
           offset = query.offset,
-          limit = query.limit)
+          limit = query.limit,
+          sortOn = query.sortOn,
+          sortDirection = query.sortDirection)
         HttpResponse(entity = jsonRepresentation(req).toJson(stats), headers = HeadersBuilder.headers(query.timeRange.endTime)).asJson
       case Left(message) ⇒
         HttpResponse(status = StatusCodes.BadRequest, entity = message).asJson
@@ -41,7 +43,7 @@ class ActorStatsSortedResource(repository: ActorStatsRepository) extends RestRes
 }
 
 object ActorStatsSortedResource {
-  case class Query(timeRange: TimeRange, scope: Scope, sortOn: ActorStatsSort, offset: Int, limit: Int)
+  case class Query(timeRange: TimeRange, scope: Scope, offset: Int, limit: Int, sortOn: ActorStatsSort, sortDirection: SortDirection)
 
   class QueryBuilder(defaultLimit: Int) extends TimeRangeQueryBuilder with ScopeQueryBuilder with ChunkQueryBuilder with PagingQueryBuilder {
     def build(url: String, queryParams: String): Either[String, Query] = {
@@ -57,22 +59,32 @@ object ActorStatsSortedResource {
         case _ ⇒ ActorStatsSorts.ProcessedMessagesSort
       }
 
+      def extractSortDirection(queryPath: String): SortDirection = queryPath match {
+        case SortDirectionPattern(direction) ⇒ direction match {
+          case "asc" ⇒ ascendingSort
+          case _     ⇒ descendingSort
+        }
+        case _ ⇒ descendingSort
+      }
+
       extractTime(queryParams) match {
         case Left(message) ⇒ Left(message)
         case Right(timeRange) ⇒
           extractScope(url, queryParams) match {
             case Left(message) ⇒ Left(message)
             case Right(scope) ⇒
-              val limit = extractLimit(queryParams).getOrElse(defaultLimit)
-              val offset = extractOffset(queryParams).getOrElse(1)
+              val limit = extractLimit(queryParams) getOrElse defaultLimit
+              val offset = extractOffset(queryParams) getOrElse 0
               val sortOn = extractSortOn(queryParams)
-              Right(Query(timeRange, scope, sortOn, offset, limit))
+              val sortDirection = extractSortDirection(queryParams)
+              Right(Query(timeRange, scope, offset, limit, sortOn, sortDirection))
           }
       }
     }
   }
 
-  val SortOnPattern = ("""^.*sortOn=([\w\-]+)&?.*?""").r
+  val SortOnPattern = """^.*sortOn=([\w\-]+)&?.*?""".r
+  val SortDirectionPattern = """^.*sortDirection=([\w\+])&?.*?""".r
 }
 
 class ActorStatsSortedJsonRepresentation(
@@ -106,7 +118,6 @@ class ActorStatsSortedJsonRepresentation(
     generator.writeNumberField("offset", sortedStats.offset)
     generator.writeNumberField("limit", sortedStats.limit)
     generator.writeNumberField("total", sortedStats.total)
-
     generator.writeEndObject()
   }
 }

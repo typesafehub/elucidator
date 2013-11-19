@@ -259,4 +259,10 @@ trait PlayStatsSort
 object PlayStatsSorts {
   case object ErrorsSort extends PlayStatsSort
   case object InvocationSort extends PlayStatsSort
+
+  case object TimeSort extends PlayStatsSort
+  case object ControllerSort extends PlayStatsSort
+  case object MethodSort extends PlayStatsSort
+  case object ResponseCodeSort extends PlayStatsSort
+  case object InvocationTimeSort extends PlayStatsSort
 }

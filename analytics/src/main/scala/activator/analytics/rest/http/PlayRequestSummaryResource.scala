@@ -4,7 +4,7 @@
 package activator.analytics.rest.http
 
 import akka.actor.ActorSystem
-import activator.analytics.data.{ TimeRangeType, TimeRange, PlayRequestSummary }
+import activator.analytics.data._
 import activator.analytics.repository.PlayRequestSummaryRepository
 import com.typesafe.trace._
 import com.typesafe.trace.uuid.UUID
@@ -12,9 +12,18 @@ import com.typesafe.trace.store.TraceRetrievalRepository
 import GatewayActor._
 import java.io.StringWriter
 import org.codehaus.jackson.JsonGenerator
-import spray.http.{ StatusCodes, HttpRequest, HttpResponse }
+import spray.http.StatusCodes
 import PlayRequestSummaryResource._
 import activator.analytics.AnalyticsExtension
+import com.typesafe.trace.ActionChunkedResult
+import com.typesafe.trace.ActionSimpleResult
+import scala.Some
+import spray.http.HttpResponse
+import com.typesafe.trace.ActionRequestInfo
+import spray.http.HttpRequest
+import com.typesafe.trace.ActionInvocationInfo
+import com.typesafe.trace.ActionResolvedInfo
+import com.typesafe.trace.ActorInfo
 
 class PlayRequestSummaryResource(playRequestSummaryRepository: PlayRequestSummaryRepository,
                                  traceRepository: TraceRetrievalRepository) extends RestResourceActor {
@@ -24,13 +33,13 @@ class PlayRequestSummaryResource(playRequestSummaryRepository: PlayRequestSummar
   def handle(req: HttpRequest): HttpResponse = {
     val path = req.uri.path.toString
     path match {
-      case _ if path.contains(SummaryMultipleEventsUri) ⇒ RestEvents(req)
-      case SummaryEventPattern(eventId) ⇒ RestEvent(req, eventId)
+      case _ if path.contains(SummaryMultipleEventsUri) ⇒ restEvents(req)
+      case SummaryEventPattern(eventId) ⇒ restEvent(req, eventId)
       case _ ⇒ HttpResponse(status = StatusCodes.BadRequest).asJson
     }
   }
 
-  def RestEvent(req: HttpRequest, id: String): HttpResponse = {
+  def restEvent(req: HttpRequest, id: String): HttpResponse = {
     parseUUID(id) match {
       case Right(uuid) ⇒
         val result = playRequestSummaryRepository.find(uuid)
@@ -49,16 +58,31 @@ class PlayRequestSummaryResource(playRequestSummaryRepository: PlayRequestSummar
    * If offset is defined in the query then paging will be used.
    * If not then the latest "limit" number of events will be retrieved.
    */
-  def RestEvents(req: HttpRequest): HttpResponse = {
+  def restEvents(req: HttpRequest): HttpResponse = {
     val result = queryBuilder.build(req.uri.query.toString)
     result match {
       case Right(query) ⇒
-        val offset = query.offset.getOrElse(1)
+        val offset = query.offset getOrElse 0
         val limit = query.limit
-
+        val sortOn = query.sortOn
+        val sortDirection = query.sortDirection
         val requestSummaries =
-          if (query.offset.isDefined) playRequestSummaryRepository.findRequestsWithinTimePeriod(query.timeRange.startTime, query.timeRange.endTime, offset, limit)
-          else playRequestSummaryRepository.findLatestRequestsWithinTimePeriod(query.timeRange.startTime, query.timeRange.endTime, limit)
+          if (query.offset.isDefined)
+            playRequestSummaryRepository.findRequestsWithinTimePeriod(
+              query.timeRange.startTime,
+              query.timeRange.endTime,
+              offset,
+              limit,
+              sortOn,
+              sortDirection)
+          else
+            playRequestSummaryRepository.findRequestsWithinTimePeriod(
+              query.timeRange.startTime,
+              query.timeRange.endTime,
+              1,
+              limit,
+              sortOn,
+              sortDirection)
         val actorInfos: Seq[Set[ActorInfo]] = requestSummaries.map { rs ⇒
           traceRepository.trace(rs.traceId).view
             .map(_.annotation)
@@ -97,22 +121,47 @@ object PlayRequestSummaryResource {
   val SummaryMultipleEventsUri = SummaryUri + "multi"
   val SummaryEventPattern = """^.*/event\/([\w\-]+)""".r
 
-  case class Query(timeRange: TimeRange, offset: Option[Int], limit: Int)
+  import Sorting._
+
+  case class Query(timeRange: TimeRange, offset: Option[Int], limit: Int, sortOn: PlayStatsSort, sortDirection: SortDirection)
 
   class QueryBuilder(defaultLimit: Int) extends TimeRangeQueryBuilder with PagingQueryBuilder {
     def build(queryPath: String): Either[String, Query] = {
+      def extractSortOn(queryPath: String): PlayStatsSort = queryPath match {
+        case SortOnPattern(sort) ⇒ sort match {
+          case "time"         ⇒ PlayStatsSorts.TimeSort
+          case "controller"   ⇒ PlayStatsSorts.ControllerSort
+          case "method"       ⇒ PlayStatsSorts.MethodSort
+          case "responseCode" ⇒ PlayStatsSorts.ResponseCodeSort
+          case _              ⇒ PlayStatsSorts.InvocationTimeSort
+        }
+        case _ ⇒ PlayStatsSorts.TimeSort
+      }
+
+      def extractSortDirection(queryPath: String): SortDirection = queryPath match {
+        case SortDirectionPattern(direction) ⇒ direction match {
+          case "asc" ⇒ ascendingSort
+          case _     ⇒ descendingSort
+        }
+        case _ ⇒ descendingSort
+      }
+
       extractTime(queryPath) match {
         case Left(message) ⇒ Left(message)
         case Right(timeRange) ⇒
           val offset = extractOffset(queryPath)
           val limit = extractLimit(queryPath) getOrElse defaultLimit
-          Right(Query(timeRange, offset, limit))
+          val sortOn = extractSortOn(queryPath)
+          val sortDirection = extractSortDirection(queryPath)
+          Right(Query(timeRange, offset, limit, sortOn, sortDirection))
       }
     }
   }
 
   val TimeRangeToQueryParametersTemplate = "startTime=%s&endTime=%s"
   val PagingQueryParametersTemplate = "offset=%s&limit=%s"
+  val SortOnPattern = """^.*sortOn=([\w\-]+)&?.*?""".r
+  val SortDirectionPattern = """^.*sortDirection=([\w\+])&?.*?""".r
 
   def timeRangeToQueryParameters(timeRange: TimeRange): Option[String] = {
     if (timeRange.rangeType == TimeRangeType.AllTime) {

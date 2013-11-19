@@ -36,18 +36,6 @@ object RequestSummaryType {
   }
 }
 
-object PlayRequestSummary {
-  def sortByTime(events: Seq[PlayRequestSummary]) = {
-    val sorted = events.sortWith { (a, b) ⇒
-      if (a.start.millis == b.start.millis)
-        a.start.nanoTime < b.start.nanoTime
-      else
-        a.start.millis < b.start.millis
-    }
-    sorted
-  }
-}
-
 case class TimeMark(millis: Timestamp, nanoTime: NanoTime)
 
 case class PlayRequestSummary(traceId: UUID,
