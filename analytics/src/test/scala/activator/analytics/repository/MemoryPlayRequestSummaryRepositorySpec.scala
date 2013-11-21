@@ -9,8 +9,17 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.MustMatchers
 import activator.analytics.AnalyticsSpec
 
+object MemoryPlayRequestSummaryRepositorySpec {
+  final val playEventTimeOrder: Ordering[PlayRequestSummary] = {
+    implicit val timeOrdering = implicitly[Ordering[(Long, Long)]]
+    timeOrdering.on((in: PlayRequestSummary) ⇒ (in.start.millis, in.start.nanoTime))
+  }
+}
+
 @org.junit.runner.RunWith(classOf[org.scalatest.junit.JUnitRunner])
 class MemoryPlayRequestSummaryRepositorySpec extends AnalyticsSpec with MustMatchers with BeforeAndAfterEach {
+  import MemoryPlayRequestSummaryRepositorySpec._
+
   val one = PlayRequestSummaryGenerator.generate
   val two = PlayRequestSummaryGenerator.generate
 
@@ -62,9 +71,7 @@ class MemoryPlayRequestSummaryRepositorySpec extends AnalyticsSpec with MustMatc
 
     "find summaries in an ascending time range" in {
       val examples = PlayRequestSummaryGenerator.genStream.take(100).toSeq
-      val subset = examples.sortWith((a, b) ⇒
-        if (a.start.millis == b.start.millis) a.start.nanoTime < b.start.nanoTime
-        else a.start.millis < b.start.millis).take(50)
+      val subset = examples.sorted(playEventTimeOrder).take(50)
       val times = subset.map(_.start.millis)
       val startTime = times.head
       val endTime = times.last
@@ -75,10 +82,7 @@ class MemoryPlayRequestSummaryRepositorySpec extends AnalyticsSpec with MustMatc
     }
 
     "find summaries in an descending time range" in {
-      val sortedOnTimeDescending =
-        PlayRequestSummaryGenerator.genStream.take(50).toSeq.sortWith((a, b) ⇒
-          if (a.start.millis == b.start.millis) a.start.nanoTime > b.start.nanoTime
-          else a.start.millis > b.start.millis)
+      val sortedOnTimeDescending = PlayRequestSummaryGenerator.genStream.take(50).toSeq.sorted(playEventTimeOrder.reverse)
       val times = sortedOnTimeDescending.map(_.start.millis)
       val startTime = times.last
       val endTime = times.head
@@ -90,9 +94,7 @@ class MemoryPlayRequestSummaryRepositorySpec extends AnalyticsSpec with MustMatc
 
     "find summaries in an ascending time range with paging" in {
       val examples = PlayRequestSummaryGenerator.genStream.take(100).toSeq
-      val subset = examples.sortWith((a, b) ⇒
-        if (a.start.millis == b.start.millis) a.start.nanoTime < b.start.nanoTime
-        else a.start.millis < b.start.millis).take(50)
+      val subset = examples.sorted(playEventTimeOrder).take(50)
       val times = subset.map(_.start.millis)
       val startTime = times.head
       val endTime = times.last
@@ -106,9 +108,7 @@ class MemoryPlayRequestSummaryRepositorySpec extends AnalyticsSpec with MustMatc
       val sortedOnController =
         PlayRequestSummaryGenerator.genStream.take(100).toSeq.sortWith((a, b) ⇒
           a.invocationInfo.controller < b.invocationInfo.controller)
-      val sortedOnTime = sortedOnController.sortWith((a, b) ⇒
-        if (a.start.millis == b.start.millis) a.start.nanoTime < b.start.nanoTime
-        else a.start.millis < b.start.millis)
+      val sortedOnTime = sortedOnController.sorted(playEventTimeOrder)
       val times = sortedOnTime.map(_.start.millis)
       sortedOnController.foreach(repository.save)
       val result = repository.findRequestsWithinTimePeriod(times.head, times.last, 0, 50, PlayStatsSorts.ControllerSort, Sorting.ascendingSort)
@@ -120,9 +120,7 @@ class MemoryPlayRequestSummaryRepositorySpec extends AnalyticsSpec with MustMatc
       val sortedOnController =
         PlayRequestSummaryGenerator.genStream.take(100).toSeq.sortWith((a, b) ⇒
           a.invocationInfo.controller > b.invocationInfo.controller)
-      val sortedOnTime = sortedOnController.sortWith((a, b) ⇒
-        if (a.start.millis == b.start.millis) a.start.nanoTime < b.start.nanoTime
-        else a.start.millis < b.start.millis)
+      val sortedOnTime = sortedOnController.sorted(playEventTimeOrder)
       val times = sortedOnTime.map(_.start.millis)
       sortedOnController.foreach(repository.save)
       val result = repository.findRequestsWithinTimePeriod(times.head, times.last, 0, 50, PlayStatsSorts.ControllerSort, Sorting.descendingSort)
