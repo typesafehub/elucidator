@@ -123,11 +123,11 @@ object PlayRequestSummaryResource {
 
   import Sorting._
 
-  case class Query(timeRange: TimeRange, offset: Option[Int], limit: Int, sortOn: PlayStatsSort, sortDirection: SortDirection)
+  case class Query(timeRange: TimeRange, offset: Option[Int], limit: Int, sortOn: PlayStatsSort[_], sortDirection: SortDirection)
 
   class QueryBuilder(defaultLimit: Int) extends TimeRangeQueryBuilder with PagingQueryBuilder {
     def build(queryPath: String): Either[String, Query] = {
-      def extractSortOn(queryPath: String): PlayStatsSort = queryPath match {
+      def extractSortOn(queryPath: String): PlayStatsSort[_] = queryPath match {
         case SortOnPattern(sort) ⇒ sort match {
           case "time"         ⇒ PlayStatsSorts.TimeSort
           case "controller"   ⇒ PlayStatsSorts.ControllerSort

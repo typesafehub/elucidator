@@ -6,6 +6,7 @@ package activator.analytics.repository
 import activator.analytics.data._
 import activator.analytics.data.Sorting._
 import com.typesafe.trace.uuid.UUID
+import scala.collection.SeqView
 
 trait PlayRequestSummaryRepository {
   def save(summary: PlayRequestSummary): Unit
@@ -15,7 +16,7 @@ trait PlayRequestSummaryRepository {
     endTime: Long,
     offset: Int = 0,
     limit: Int = 100,
-    sortOn: PlayStatsSort,
+    sortOn: PlayStatsSort[_],
     sorting: SortDirection): Seq[PlayRequestSummary]
   def purgeOld(): Unit
 }
@@ -34,13 +35,11 @@ class MemoryPlayRequestSummaryRepository(maxAge: Long) extends PlayRequestSummar
   def find(trace: UUID): Option[PlayRequestSummary] =
     Option(internalMap.get(trace)).map(_.summary)
 
-  def findRequestsWithinTimePeriod(startTime: Long, endTime: Long, offset: Int, limit: Int, sortOn: PlayStatsSort, sorting: SortDirection): Seq[PlayRequestSummary] = {
+  def findRequestsWithinTimePeriod(startTime: Long, endTime: Long, offset: Int, limit: Int, sortOn: PlayStatsSort[_], sorting: SortDirection): Seq[PlayRequestSummary] = {
     def isInTimeRange(timestamp: Long): Boolean = timestamp >= startTime && timestamp <= endTime
-    val descending = sortDescending(internalMap.values.filter(x ⇒ isInTimeRange(x.summary.start.millis)).map(_.summary).toSeq, sortOn)
-    val sorted =
-      if (sorting == descendingSort) descending
-      else descending.reverse
-    sorted.slice(offset, offset + limit)
+    val doSort = if (sorting == descendingSort) sortOn.dec(_) else sortOn.asc(_)
+    val filtered = internalMap.values.toSeq.view.filter(x ⇒ isInTimeRange(x.summary.start.millis)).map(_.summary)
+    doSort(filtered).slice(offset, offset + limit)
   }
 
   def clear(): Unit = internalMap.clear()
@@ -48,24 +47,6 @@ class MemoryPlayRequestSummaryRepository(maxAge: Long) extends PlayRequestSummar
   def purgeOld(): Unit = {
     val top = System.currentTimeMillis - maxAge
     internalMap.entrySet.filter(e ⇒ e.getValue.timestamp <= top).foreach(e ⇒ internalMap.remove(e.getKey, e.getValue))
-  }
-
-  def sortDescending(found: Seq[PlayRequestSummary], sortOn: PlayStatsSort): Seq[PlayRequestSummary] = {
-    def totalTimeMillis(prs: PlayRequestSummary): Long = (prs.end.nanoTime - prs.start.nanoTime) * 1000 * 1000
-    sortOn match {
-      case PlayStatsSorts.TimeSort ⇒
-        found.sortWith((a, b) ⇒
-          if (a.start.millis == b.start.millis) a.start.nanoTime > b.start.nanoTime
-          else a.start.millis > b.start.millis)
-      case PlayStatsSorts.ControllerSort ⇒
-        found.sortWith((a, b) ⇒ a.invocationInfo.controller > b.invocationInfo.controller)
-      case PlayStatsSorts.MethodSort ⇒
-        found.sortWith((a, b) ⇒ a.invocationInfo.httpMethod > b.invocationInfo.httpMethod)
-      case PlayStatsSorts.ResponseCodeSort ⇒
-        found.sortWith((a, b) ⇒ a.response.resultInfo.httpResponseCode > b.response.resultInfo.httpResponseCode)
-      case PlayStatsSorts.InvocationTimeSort ⇒
-        found.sortWith((a, b) ⇒ totalTimeMillis(a) > totalTimeMillis(b))
-    }
   }
 }
 

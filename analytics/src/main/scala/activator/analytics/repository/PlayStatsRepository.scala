@@ -9,7 +9,7 @@ trait PlayStatsRepository {
   def save(stats: Iterable[PlayStats]): Unit
   def findBy(timeRange: TimeRange, scope: Scope): Option[PlayStats]
   def findWithinTimePeriod(timeRange: TimeRange, scope: Scope): Seq[PlayStats]
-  def findSorted(timeRange: TimeRange, scope: Scope, sortOn: PlayStatsSort, maxResult: Int): Seq[PlayStats]
+  def findSorted(timeRange: TimeRange, scope: Scope, sortOn: PlayStatsSort[_], maxResult: Int): Seq[PlayStats]
 }
 
 class MemoryPlayStatsRepository extends BasicMemoryStatsRepository[PlayStats, Scope] with PlayStatsRepository {
@@ -20,8 +20,7 @@ class MemoryPlayStatsRepository extends BasicMemoryStatsRepository[PlayStats, Sc
     def anonymous(stat: PlayStats): Boolean = stat.scope.anonymous
   }
 
-  def findSorted(timeRange: TimeRange, scope: Scope, sortOn: PlayStatsSort, maxResult: Int): Seq[PlayStats] = {
-    import PlayStatsSorts._
+  def findSorted(timeRange: TimeRange, scope: Scope, sortOn: PlayStatsSort[_], maxResult: Int): Seq[PlayStats] = {
     val stats = getAllStats
 
     val matchingStats = for {
