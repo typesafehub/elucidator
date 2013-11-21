@@ -67,22 +67,13 @@ class PlayRequestSummaryResource(playRequestSummaryRepository: PlayRequestSummar
         val sortOn = query.sortOn
         val sortDirection = query.sortDirection
         val requestSummaries =
-          if (query.offset.isDefined)
-            playRequestSummaryRepository.findRequestsWithinTimePeriod(
-              query.timeRange.startTime,
-              query.timeRange.endTime,
-              offset,
-              limit,
-              sortOn,
-              sortDirection)
-          else
-            playRequestSummaryRepository.findRequestsWithinTimePeriod(
-              query.timeRange.startTime,
-              query.timeRange.endTime,
-              1,
-              limit,
-              sortOn,
-              sortDirection)
+          playRequestSummaryRepository.findRequestsWithinTimePeriod(
+            query.timeRange.startTime,
+            query.timeRange.endTime,
+            query.offset getOrElse 0,
+            limit,
+            sortOn,
+            sortDirection)
         val actorInfos: Seq[Set[ActorInfo]] = requestSummaries.map { rs ⇒
           traceRepository.trace(rs.traceId).view
             .map(_.annotation)
