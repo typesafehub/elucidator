@@ -12,6 +12,7 @@ import org.codehaus.jackson.JsonGenerator
 import spray.http.{ StatusCodes, HttpResponse, HttpRequest }
 import activator.analytics.AnalyticsExtension
 import activator.analytics.data.Sorting._
+import java.lang.IllegalArgumentException
 
 class ActorStatsSortedResource(repository: ActorStatsRepository) extends RestResourceActor {
   import ActorStatsSortedResource._
@@ -45,7 +46,11 @@ class ActorStatsSortedResource(repository: ActorStatsRepository) extends RestRes
 object ActorStatsSortedResource {
   case class Query(timeRange: TimeRange, scope: Scope, offset: Int, limit: Int, sortOn: ActorStatsSort, sortDirection: SortDirection)
 
+  final val SortOnPattern = """^.*sortOn=([\w\-]+)&?.*?""".r
+
   class QueryBuilder(defaultLimit: Int) extends TimeRangeQueryBuilder with ScopeQueryBuilder with ChunkQueryBuilder with PagingQueryBuilder {
+    import SortingHelpers._
+
     def build(url: String, queryParams: String): Either[String, Query] = {
       def extractSortOn(queryParams: String): ActorStatsSort = queryParams match {
         case SortOnPattern(sort) ⇒ sort match {
@@ -60,11 +65,10 @@ object ActorStatsSortedResource {
       }
 
       def extractSortDirection(queryPath: String): SortDirection = queryPath match {
-        case SortDirectionPattern(direction) ⇒ direction match {
-          case "asc" ⇒ ascendingSort
-          case _     ⇒ descendingSort
+        case DefaultDescendingExtractor(direction) ⇒ direction match {
+          case Right(x)  ⇒ x
+          case Left(msg) ⇒ throw new IllegalArgumentException(msg)
         }
-        case _ ⇒ descendingSort
       }
 
       extractTime(queryParams) match {
@@ -77,14 +81,13 @@ object ActorStatsSortedResource {
               val offset = extractOffset(queryParams) getOrElse 0
               val sortOn = extractSortOn(queryParams)
               val sortDirection = extractSortDirection(queryParams)
-              Right(Query(timeRange, scope, offset, limit, sortOn, sortDirection))
+              // Ideally, 'Query' should take a 'SortDirection' type, not a string
+              // NO STRINGLY PROGRAMMING! It's Scala damnit! ;-)
+              Right(Query(timeRange, scope, offset, limit, sortOn, sortDirection.direction))
           }
       }
     }
   }
-
-  val SortOnPattern = """^.*sortOn=([\w\-]+)&?.*?""".r
-  val SortDirectionPattern = """^.*sortDirection=([\w\+])&?.*?""".r
 }
 
 class ActorStatsSortedJsonRepresentation(
