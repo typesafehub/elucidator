@@ -4,6 +4,7 @@
 package activator.analytics.repository
 
 import activator.analytics.data._
+import activator.analytics.data.Sorting._
 import activator.analytics.analyzer.ActorClassification
 
 trait ActorStatsRepository {
@@ -13,11 +14,12 @@ trait ActorStatsRepository {
   def findSorted(
     timeRange: TimeRange,
     scope: Scope,
-    sortOn: ActorStatsSort,
     includeAnonymous: Boolean,
     includeTemp: Boolean,
-    offset: Int = 1,
-    limit: Int): ActorStatsSorted
+    offset: Int = 0,
+    limit: Int,
+    sortOn: ActorStatsSort,
+    sortDirection: SortDirection): ActorStatsSorted
 }
 
 object ActorStatsRepository {
@@ -25,11 +27,12 @@ object ActorStatsRepository {
     stats: Seq[ActorStats],
     timeRange: TimeRange,
     scope: Scope,
-    sortOn: ActorStatsSort,
     includeAnonymous: Boolean,
     includeTemp: Boolean,
     offset: Int,
-    limit: Int): ActorStatsSorted = {
+    limit: Int,
+    sortOn: ActorStatsSort,
+    sortDirection: SortDirection): ActorStatsSorted = {
 
     val tempStats =
       if (includeTemp) stats
@@ -52,7 +55,7 @@ object ActorStatsRepository {
       case _ ⇒ a < b
     }
 
-    val sortedStats = sortOn match {
+    val descending = sortOn match {
       case ActorStatsSorts.DeviationsSort ⇒
         groupedStats.sortWith((a, b) ⇒ a.metrics.counts.deviationCount > b.metrics.counts.deviationCount)
       case ActorStatsSorts.ProcessedMessagesSort ⇒
@@ -76,10 +79,14 @@ object ActorStatsRepository {
         groupedStats.sortWith((a, b) ⇒ a.metrics.mailbox.maxTimeInMailbox > b.metrics.mailbox.maxTimeInMailbox)
     }
 
+    val sortedStats =
+      if (sortDirection == descendingSort) descending
+      else descending.reverse
+
     ActorStatsSorted(
       timeRange,
       scope,
-      sortedStats.slice(offset - 1, offset - 1 + limit),
+      sortedStats.slice(offset, offset + limit),
       offset,
       limit,
       sortedStats.size)
@@ -89,7 +96,6 @@ object ActorStatsRepository {
 case class ActorStatsSorted(timeRange: TimeRange, scope: Scope, stats: Seq[ActorStats], offset: Int, limit: Int, total: Int)
 
 class MemoryActorStatsRepository extends BasicMemoryStatsRepository[ActorStats, Scope] with ActorStatsRepository {
-
   override val customizer = new BasicMemoryStatsCustomizer[ActorStats, Scope]() {
     def scope(stat: ActorStats): Scope = stat.scope
     def timeRange(stat: ActorStats): TimeRange = stat.timeRange
@@ -99,11 +105,12 @@ class MemoryActorStatsRepository extends BasicMemoryStatsRepository[ActorStats, 
   def findSorted(
     timeRange: TimeRange,
     scope: Scope,
-    sortOn: ActorStatsSort,
     includeAnonymous: Boolean,
     includeTemp: Boolean,
     offset: Int,
-    limit: Int): ActorStatsSorted = {
+    limit: Int,
+    sortOn: ActorStatsSort,
+    sortDirection: SortDirection): ActorStatsSorted = {
     val stats = getAllStats
 
     val matchingStats = for {
@@ -123,7 +130,7 @@ class MemoryActorStatsRepository extends BasicMemoryStatsRepository[ActorStats, 
       if stat.scope.path.isDefined
     } yield stat
 
-    ActorStatsRepository.collectSorted(matchingStats, timeRange, scope, sortOn, includeAnonymous, includeTemp, offset, limit)
+    ActorStatsRepository.collectSorted(matchingStats, timeRange, scope, includeAnonymous, includeTemp, offset, limit, sortOn, sortDirection)
   }
 }
 

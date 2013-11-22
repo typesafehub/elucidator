@@ -13,7 +13,7 @@ import scala.collection.mutable.{ Map ⇒ MutableMap }
 trait SpanRepository {
   def save(spans: Iterable[Span]): Unit
   def findBySpanId(spanId: UUID): Option[Span]
-  def findWithinTimePeriod(timeRange: TimeRange, offset: Int = 1, limit: Int = 100): Seq[Span]
+  def findWithinTimePeriod(timeRange: TimeRange, offset: Int = 0, limit: Int = 100): Seq[Span]
   def latest(limit: Int): Iterable[Span]
 }
 
@@ -49,7 +49,7 @@ class MemorySpanRepository(maxSpanElements: Int = 3333) extends SpanRepository {
 
     val found = all.filter(x ⇒ isInTimeRange(x.startTime)).toSeq
     val sorted = found.sortBy(_.startTime)
-    val page = sorted.slice(offset - 1, offset - 1 + limit)
+    val page = sorted.slice(offset, offset + limit)
     page
   }
 

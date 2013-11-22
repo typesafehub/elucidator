@@ -8,6 +8,8 @@ import activator.analytics.data.TimeRangeType.AllTime
 import activator.analytics.metrics.RateMetric
 import com.typesafe.trace.uuid.UUID
 import com.typesafe.trace.util.Uuid
+import activator.analytics.data.PlayRequestSummary
+import scala.collection.SeqView
 
 /**
  * Aggregated statistics over the time period for the Play actions
@@ -255,8 +257,21 @@ case class PeakInvocationRateMetrics(
   }
 }
 
-trait PlayStatsSort
+trait SortHelpers[T] {
+  def extractor: PlayRequestSummary ⇒ T
+  def lt: Ordering[T]
+  private final val ltOrdering: Ordering[PlayRequestSummary] = lt.on(extractor)
+  private final val gteOrdering: Ordering[PlayRequestSummary] = lt.reverse.on(extractor)
+  def asc(in: SeqView[PlayRequestSummary, Seq[_]]): SeqView[PlayRequestSummary, Seq[_]] = in.sorted(ltOrdering)
+  def dec(in: SeqView[PlayRequestSummary, Seq[_]]): SeqView[PlayRequestSummary, Seq[_]] = in.sorted(gteOrdering)
+}
+
+sealed class PlayStatsSort[T](val extractor: PlayRequestSummary ⇒ T)(implicit val lt: Ordering[T]) extends SortHelpers[T]
 object PlayStatsSorts {
-  case object ErrorsSort extends PlayStatsSort
-  case object InvocationSort extends PlayStatsSort
+  private final def totalTimeMillis(prs: PlayRequestSummary): Long = (prs.end.nanoTime - prs.start.nanoTime) * 1000 * 1000
+  case object TimeSort extends PlayStatsSort[(Long, Long)](x ⇒ (x.start.millis, x.start.nanoTime))
+  case object ControllerSort extends PlayStatsSort[String](_.invocationInfo.controller)
+  case object MethodSort extends PlayStatsSort[String](_.invocationInfo.httpMethod)
+  case object ResponseCodeSort extends PlayStatsSort[Int](_.response.resultInfo.httpResponseCode)
+  case object InvocationTimeSort extends PlayStatsSort[Long](totalTimeMillis)
 }

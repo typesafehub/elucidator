@@ -160,7 +160,7 @@ object TraceEventResource {
       extractTime(queryPath) match {
         case Left(message) ⇒ Left(message)
         case Right(timeRange) ⇒
-          val offset = extractOffset(queryPath) getOrElse 1
+          val offset = extractOffset(queryPath) getOrElse 0
           val limit = extractLimit(queryPath) getOrElse defaultLimit
           Right(Query(timeRange, offset, limit))
       }
@@ -188,7 +188,6 @@ object TraceEventResource {
         val timeQueryParams = timeRangeToQueryParameters(timeRange)
         pagingParams + timeQueryParams.map("&" + _).getOrElse("")
     }
-
   }
 
 }

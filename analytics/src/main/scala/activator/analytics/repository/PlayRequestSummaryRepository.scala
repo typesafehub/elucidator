@@ -4,13 +4,20 @@
 package activator.analytics.repository
 
 import activator.analytics.data._
+import activator.analytics.data.Sorting._
 import com.typesafe.trace.uuid.UUID
+import scala.collection.SeqView
 
 trait PlayRequestSummaryRepository {
   def save(summary: PlayRequestSummary): Unit
   def find(trace: UUID): Option[PlayRequestSummary]
-  def findRequestsWithinTimePeriod(startTime: Long, endTime: Long, offset: Int = 1, limit: Int = 100): Seq[PlayRequestSummary]
-  def findLatestRequestsWithinTimePeriod(startTime: Long, endTime: Long, limit: Int = 100): Seq[PlayRequestSummary]
+  def findRequestsWithinTimePeriod(
+    startTime: Long,
+    endTime: Long,
+    offset: Int = 0,
+    limit: Int = 100,
+    sortOn: PlayStatsSort[_],
+    sorting: SortDirection): Seq[PlayRequestSummary]
   def purgeOld(): Unit
 }
 
@@ -28,24 +35,11 @@ class MemoryPlayRequestSummaryRepository(maxAge: Long) extends PlayRequestSummar
   def find(trace: UUID): Option[PlayRequestSummary] =
     Option(internalMap.get(trace)).map(_.summary)
 
-  def findRequestsWithinTimePeriod(startTime: Long, endTime: Long, offset: Int, limit: Int): Seq[PlayRequestSummary] = {
-    def isInTimeRange(timestamp: Long): Boolean = {
-      timestamp >= startTime && timestamp <= endTime
-    }
-
-    val found = internalMap.values.filter(x ⇒ isInTimeRange(x.summary.start.millis)).map(_.summary).toSeq
-    val sorted = PlayRequestSummary.sortByTime(found)
-    sorted.slice(offset - 1, offset - 1 + limit)
-  }
-
-  def findLatestRequestsWithinTimePeriod(startTime: Long, endTime: Long, limit: Int = 100): Seq[PlayRequestSummary] = {
-    def isInTimeRange(timestamp: Long): Boolean = {
-      timestamp >= startTime && timestamp <= endTime
-    }
-
-    val found = internalMap.values.filter(x ⇒ isInTimeRange(x.summary.start.millis)).map(_.summary).toSeq
-    val sorted = PlayRequestSummary.sortByTime(found)
-    sorted.slice(sorted.length - limit - 1, sorted.length - 1).reverse
+  def findRequestsWithinTimePeriod(startTime: Long, endTime: Long, offset: Int, limit: Int, sortOn: PlayStatsSort[_], sorting: SortDirection): Seq[PlayRequestSummary] = {
+    def isInTimeRange(timestamp: Long): Boolean = timestamp >= startTime && timestamp <= endTime
+    val doSort = if (sorting == descendingSort) sortOn.dec(_) else sortOn.asc(_)
+    val filtered = internalMap.values.toSeq.view.filter(x ⇒ isInTimeRange(x.summary.start.millis)).map(_.summary)
+    doSort(filtered).slice(offset, offset + limit)
   }
 
   def clear(): Unit = internalMap.clear()
