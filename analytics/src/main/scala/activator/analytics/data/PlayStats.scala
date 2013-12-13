@@ -8,7 +8,6 @@ import activator.analytics.data.TimeRangeType.AllTime
 import activator.analytics.metrics.RateMetric
 import com.typesafe.trace.uuid.UUID
 import com.typesafe.trace.util.Uuid
-import activator.analytics.data.PlayRequestSummary
 import scala.collection.SeqView
 
 /**

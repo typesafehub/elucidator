@@ -3,22 +3,24 @@ import sbt.Keys._
 
 object Dependencies {
 
-  val traceRepo = "traceRepo" at "http://repo.typesafe.com/typesafe/releases"
+  val traceRepo = "trace repo" at "http://repo.typesafe.com/typesafe/releases"
+  val sprayRepo = "spray repo" at "http://repo.spray.io"
 
   val analyticsLibs = Seq(
-    "com.typesafe.trace" % "trace-collect" % "0.1-a6ea92738d3f13a09750e6d741dd8553f4701979",
+    "com.typesafe.trace"   % "trace-collect"      % "0.1.0",
     "org.codehaus.jackson" % "jackson-core-asl"   % "1.9.9",
     "org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.9",
-    "io.spray"             % "spray-can"          % "1.1-M8",
+    "com.typesafe.akka"    %% "akka-actor"        % "2.2.3",
+    "io.spray"             % "spray-can"          % "1.2.0",
     "ch.qos.logback"       % "logback-classic"    % "1.0.13",
 
-    "com.typesafe.akka"    %% "akka-testkit"      % "2.2.1"          % "test",
+    "com.typesafe.akka"    %% "akka-testkit"      % "2.2.3"          % "test",
     "junit"                % "junit"              % "4.5"            % "test",
     "org.scalatest"        %% "scalatest"         % "1.9.1"          % "test")
 
   def analyticsDependencies: Seq[Setting[_]] =
     Seq(
-      resolvers += traceRepo,
+      resolvers ++= Seq(traceRepo, sprayRepo),
       libraryDependencies ++= analyticsLibs)
 
 }
