@@ -19,7 +19,10 @@ abstract class BasicMemoryStatsCustomizer[STAT, SCOPE] {
   def anonymous(stat: STAT): Boolean
 }
 
-trait BasicMemoryStatsRepository[STAT, SCOPE] {
+trait BasicMemoryStatsRepository[STAT, SCOPE] extends RepositoryLifecycle {
+  // Register this repository with the repository handler
+  LocalRepositoryLifecycleHandler.register(this)
+
   protected def customizer: BasicMemoryStatsCustomizer[STAT, SCOPE]
 
   private val byScopeByTimeRange = MutableMap[SCOPE, MutableMap[TimeRange, STAT]]()
