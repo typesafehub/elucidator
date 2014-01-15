@@ -25,5 +25,6 @@ class LocalMemoryRepository(system: ActorSystem) {
   def spanTimeSeriesRepository = LocalMemorySpanTimeSeriesRepository
   def summarySpanStatsRepository = LocalMemorySummarySpanStatsRepository
   def systemMetricsTimeSeriesRepository = LocalMemorySystemMetricsRepository
+  def lifecycleRepository = LocalRepositoryLifecycleHandler
   val traceRepository = LocalMemoryTraceRepository
 }
