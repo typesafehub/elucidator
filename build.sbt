@@ -25,7 +25,7 @@ def formattingPreferences = {
 
 def defaultSettings = Seq(
     organization := "com.typesafe.activator",
-    version := "0.1-SNAPSHOT",
+    version := "0.2-SNAPSHOT",
     scalaVersion := "2.10.3",
     publishTo := Some(repo),
     publishArtifact in packageSrc := false,
