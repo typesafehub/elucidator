@@ -13,9 +13,11 @@ trait PlayTraceTreeRepository {
   def purgeOld(): Unit
 }
 
-class MemoryPlayTraceTreeRepository(maxAge: Long) extends PlayTraceTreeRepository {
+class MemoryPlayTraceTreeRepository(maxAge: Long) extends PlayTraceTreeRepository with RepositoryLifecycle {
   import java.util.concurrent.ConcurrentHashMap
   import scala.collection.JavaConversions._
+
+  LocalRepositoryLifecycleHandler.register(this)
 
   case class Value(traces: Seq[TraceEvent], timestamp: Long = System.currentTimeMillis)
 

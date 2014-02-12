@@ -21,9 +21,11 @@ trait PlayRequestSummaryRepository {
   def purgeOld(): Unit
 }
 
-class MemoryPlayRequestSummaryRepository(maxAge: Long) extends PlayRequestSummaryRepository {
+class MemoryPlayRequestSummaryRepository(maxAge: Long) extends PlayRequestSummaryRepository with RepositoryLifecycle {
   import java.util.concurrent.ConcurrentHashMap
   import scala.collection.JavaConversions._
+
+  LocalRepositoryLifecycleHandler.register(this)
 
   case class Value(summary: PlayRequestSummary, timestamp: Long = System.currentTimeMillis)
 

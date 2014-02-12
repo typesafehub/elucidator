@@ -17,7 +17,9 @@ trait SpanRepository {
   def latest(limit: Int): Iterable[Span]
 }
 
-class MemorySpanRepository(maxSpanElements: Int = 3333) extends SpanRepository {
+class MemorySpanRepository(maxSpanElements: Int = 3333) extends SpanRepository with RepositoryLifecycle {
+
+  LocalRepositoryLifecycleHandler.register(this)
 
   private var all = List[Span]()
   private val bySpanId = MutableMap[UUID, Span]()
