@@ -33,5 +33,13 @@ class RepositoryLifecycleHandlerSpec extends AnalyticsSpec with MustMatchers {
       metadataRepo.findFiltered(minuteRange(now), Scope(), false, false).metrics.paths.size must equal(0)
       actorRepo.findWithinTimePeriod(minuteRange(now), Scope()).size must equal(0)
     }
+
+    "reset time when clear is invoked" in {
+      val startTime1 = lifecycleHandler.cacheStartTime
+      Thread.sleep(100)
+      lifecycleHandler.clear()
+      val startTime2 = lifecycleHandler.cacheStartTime
+      startTime2 > startTime1 must be(true)
+    }
   }
 }
