@@ -35,10 +35,10 @@ class RepositoryLifecycleHandlerSpec extends AnalyticsSpec with MustMatchers {
     }
 
     "reset time when clear is invoked" in {
-      val startTime1 = lifecycleHandler.cacheStartTime
+      val startTime1 = lifecycleHandler.startTime
       Thread.sleep(100)
       lifecycleHandler.clear()
-      val startTime2 = lifecycleHandler.cacheStartTime
+      val startTime2 = lifecycleHandler.startTime
       startTime2 > startTime1 must be(true)
     }
   }
