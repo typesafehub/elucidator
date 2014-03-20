@@ -28,7 +28,8 @@ class ActorStatsAnalyzerSpec extends AnalyticsSpec(ActorStatsAnalyzerSpec.testCo
   override def beforeEach() {
     traceRepository.clear()
     statsRepository = new MemoryActorStatsRepository
-    analyzer = system.actorOf(Props(new ActorStatsAnalyzer(None, statsRepository, traceRepository, alertDispatcher)), "testAnalyzer")
+    // Removed name of actor because of actor name collisions in integration testing.
+    analyzer = system.actorOf(Props(new ActorStatsAnalyzer(None, statsRepository, traceRepository, alertDispatcher)))
   }
 
   override def afterEach() {
