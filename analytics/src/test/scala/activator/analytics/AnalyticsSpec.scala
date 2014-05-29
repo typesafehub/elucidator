@@ -9,7 +9,7 @@ import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import java.util.concurrent.TimeoutException
 import org.scalatest.matchers.MustMatchers
-import org.scalatest.{ WordSpec, BeforeAndAfterAll }
+import org.scalatest.{ WordSpecLike, BeforeAndAfterAll }
 import scala.concurrent.duration._
 import akka.event.{ LoggingAdapter, Logging }
 import akka.event.Logging._
@@ -63,7 +63,7 @@ object AnalyticsSpec {
 
 }
 
-abstract class AnalyticsSpec(_system: ActorSystem) extends TestKit(_system) with WordSpec with MustMatchers with BeforeAndAfterAll {
+abstract class AnalyticsSpec(_system: ActorSystem) extends TestKit(_system) with WordSpecLike with MustMatchers with BeforeAndAfterAll {
 
   def this(config: Config) =
     this(ActorSystem(AnalyticsSpec.getCallerName,

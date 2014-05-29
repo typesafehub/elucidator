@@ -10,12 +10,12 @@ import com.typesafe.trace.Annotation
 import com.typesafe.trace.TraceEvent
 import java.net.{ InetAddress, UnknownHostException }
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.WordSpec
+import org.scalatest.WordSpecLike
 import scala.concurrent.Await
 import activator.analytics.TimeoutHandler
 import scala.concurrent.duration._
 
-trait AnalyzeTest extends BeforeAndAfterEach { this: WordSpec ⇒
+trait AnalyzeTest extends BeforeAndAfterEach { this: WordSpecLike ⇒
 
   val HostName: String = try {
     InetAddress.getLocalHost.getCanonicalHostName
