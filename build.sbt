@@ -26,7 +26,7 @@ def formattingPreferences = {
 def defaultSettings = Seq(
     organization := "com.typesafe.activator",
     version := "0.2-SNAPSHOT",
-    scalaVersion := "2.10.3",
+    scalaVersion := "2.11.1",
     publishTo := Some(repo),
     publishArtifact in packageSrc := false,
     publishArtifact in packageDoc := false
@@ -34,7 +34,7 @@ def defaultSettings = Seq(
 
 // *** DISTRIBUTION SETTINGS ***
 
-val repo = Resolver.url("activator-analytics", new URL("https://private-repo.typesafe.com/typesafe/maven-releases"))
+val repo = Resolver.url("activator-analytics", new URL("http://private-repo.typesafe.com/typesafe/maven-releases"))
 
 // *** ANALYTICS PROJECT ***
 
