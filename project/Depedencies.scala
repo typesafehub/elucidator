@@ -11,7 +11,7 @@ object Dependencies {
     "org.codehaus.jackson" % "jackson-core-asl"   % "1.9.9",
     "org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.9",
     "com.typesafe.akka"    %% "akka-actor"        % "2.3.3",
-    "io.spray"             % "spray-can"          % "1.3.1",
+    "io.spray"             %% "spray-can"         % "1.3.1",
     "ch.qos.logback"       % "logback-classic"    % "1.0.13",
 
     "com.typesafe.akka"    %% "akka-testkit"      % "2.3.3"          % "test",
