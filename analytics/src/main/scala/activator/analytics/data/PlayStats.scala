@@ -273,4 +273,5 @@ object PlayStatsSorts {
   case object MethodSort extends PlayStatsSort[String](_.invocationInfo.httpMethod)
   case object ResponseCodeSort extends PlayStatsSort[Int](_.response.resultInfo.httpResponseCode)
   case object InvocationTimeSort extends PlayStatsSort[Long](totalTimeMillis)
+  case object PathSort extends PlayStatsSort[String](_.invocationInfo.path)
 }
