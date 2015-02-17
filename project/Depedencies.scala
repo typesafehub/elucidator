@@ -7,7 +7,7 @@ object Dependencies {
   val sprayRepo = "spray repo" at "http://repo.spray.io"
 
   val analyticsLibs = Seq(
-    "com.typesafe.trace"   % "trace-collect211"   % "0.1.3",
+    "com.typesafe.trace"   % "echo-collect211"    % "0.1.12",
     "org.codehaus.jackson" % "jackson-core-asl"   % "1.9.13",
     "org.codehaus.jackson" % "jackson-mapper-asl" % "1.9.13",
     "com.typesafe.akka"    %% "akka-actor"        % "2.3.9",
@@ -16,7 +16,7 @@ object Dependencies {
 
     "com.typesafe.akka"    %% "akka-testkit"      % "2.3.9"          % "test",
     "junit"                % "junit"              % "4.5"            % "test",
-    "org.scalatest"        %% "scalatest"         % "2.2.1"          % "test")
+    "org.scalatest"        %% "scalatest"         % "2.2.4"          % "test")
 
   def analyticsDependencies: Seq[Setting[_]] =
     Seq(
